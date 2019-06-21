@@ -1,0 +1,68 @@
+<div class="row">
+    <simple-popup [(isHidden)]="hideModal" [title]="removeModalTitle" [message]="removeModalMessage" [type]="'warning'" [buttons]="[{name:'yes', execute:true }, {name:'no', execute:false}]"
+        (execute)="execute($event)" (closed)="wasClosed($event)"></simple-popup>
+    <div *ngIf="projects" class="col-md-12 vert-aligned">
+        <label class="col-md-2 label-inline control-label">Select Project:</label>
+        <div class="col-sm-3">
+            <lookup-autocomplete placeholder="Select Project" [allowEmptyValue]="false" [propertiesToShow]="['name']" [array]="projects"
+                [model]="selectedProject" (modelChange)="onProjectChange($event)"></lookup-autocomplete>
+        </div>
+    </div>
+    <div class="col-md-12 top-padding-md">
+        <div class="panel panel-default">
+            <table [mfData]="resolutions" #mf="mfDataTable" [mfSortBy]="sortBy" [mfSortOrder]="sortOrder" [mfRowsOnPage]="1000" id="datatable"
+                *ngIf="resolutions" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            <mfDefaultSorter by="name">Name</mfDefaultSorter>
+                        </th>
+                        <th>
+                            <mfDefaultSorter by="color">Color</mfDefaultSorter>
+                        </th>
+                        <th class="fit">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="vert-aligned">
+                            <input type="text" trim="blur" class="form-control input-sm" name="newName" [(ngModel)]="newName" placeholder="Resolution Name">
+                        </td>
+                        <td class="text-center vert-aligned">
+                            <lookup-colored *ngIf="colors" [colorProperty]="'id'" [propertiesToShow]="['name']" [array]="colors" [allowEmptyValue]="false"
+                                [(model)]="newColor"></lookup-colored>
+                        </td>
+                        <td class="text-center vert-aligned fit">
+                            <button (click)="createResolution()" class="btn btn-sm btn-success" [disabled]="newName==''">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="clickable-element" *ngFor="let resolution of mf.data">
+                        <td class="vert-aligned">
+                            <inline-editor [disabledInline]="!resolution.project_id" id="name" cols="150" name="name" type="text" trim="blur" [(ngModel)]="resolution.name"
+                                (onSave)="updateResolution(resolution, $event)"></inline-editor>
+                        </td>
+                        <td class="text-center vert-aligned">
+                            <lookup-colored *ngIf="resolution" [colorProperty]="'id'" [propertiesToShow]="['name']" [array]="colors" [allowEmptyValue]="false"
+                                [model]="getColor(resolution.color)" [disabled]="!resolution.project_id" (modelChange)="updateResolution(resolution, $event)"></lookup-colored>
+                        </td>
+                        <td class="text-center vert-aligned">
+                            <button *ngIf="resolution.project_id" (click)="removeResolution(resolution)" class="btn btn-sm btn-danger row-action-button">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                            <label class="label-inline{" *ngIf="!resolution.project_id">Global</label>
+                        </td>
+                        <tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">
+                            <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25,1000]"></mfBootstrapPaginator>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
