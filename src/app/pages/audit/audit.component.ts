@@ -3,7 +3,7 @@ import { AuditStat, Service } from '../../shared/models/audit';
 import { AuditService } from '../../services/audits.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../shared/models/user';
-import { saveAs as importedSaveAs } from 'file-saver';
+import * as fileSaver from 'file-saver';
 import { UserService } from '../../services/user.services';
 
 @Component({
@@ -166,7 +166,7 @@ export class AuditComponent implements OnInit {
 
   download(all: boolean) {
     this.auditService.downloadSubmittedAuditExports('xlsx', all).subscribe(result => {
-      importedSaveAs(result.blob, result.fileName);
+      fileSaver.saveAs(result.blob, result.fileName);
     });
   }
 
