@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'simple-popup',
@@ -6,7 +7,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   providers: [
   ]
 })
-export class BasePopupComponent {
+export class BasePopupComponent implements OnInit {
   @Input() isHidden: boolean;
   @Input() title: string;
   @Input() message: string;
@@ -15,14 +16,26 @@ export class BasePopupComponent {
   @Output() closed = new EventEmitter();
   @Output() execute = new EventEmitter();
 
+  private okOperation = new Subject();
+  public answer: Promise<boolean>;
+
+  ngOnInit() {
+    this.answer = new Promise((resolve) => {
+      this.okOperation.subscribe((success: boolean) => {
+        this.hideModal();
+        resolve(success);
+      });
+    });
+    this.execute.emit(this.answer);
+  }
+
   hideModal() {
     this.isHidden = true;
     this.closed.emit(this.isHidden);
   }
 
-  onClick(event) {
-    this.execute.emit(event);
-    this.hideModal();
+  onClick(event: boolean) {
+    this.okOperation.next(event);
   }
 }
 

@@ -1,6 +1,6 @@
 {
     "creationTest": {
         "name": "Auto test",
-        "description": "Description"
+        "body": "Description"
     }
 }

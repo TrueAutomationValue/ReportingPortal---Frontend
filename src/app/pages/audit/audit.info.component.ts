@@ -231,14 +231,15 @@ export class AuditInfoComponent {
     this.hideModal = false;
   }
 
-  execute($event) {
-    if ($event === 'remove') {
+  async execute($event) {
+    const event = await $event;
+    if (event === 'remove') {
       this.auditService.removeAudit(this.audit).subscribe(() => this.router.navigate(['/audit']));
-    } else if ($event === 'start') {
+    } else if (event === 'start') {
       this.start();
-    } else if ($event === 'finish') {
+    } else if (event === 'finish') {
       this.finish();
-    } else if ($event === 'submit') {
+    } else if (event === 'submit') {
       this.submit();
     }
     this.hideModal = true;

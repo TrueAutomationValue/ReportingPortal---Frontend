@@ -47,8 +47,8 @@ export class ImportTokenComponent {
     });
   }
 
-  execute($event) {
-    if ($event) {
+  async execute($event) {
+    if (await $event) {
       this.generateToken();
     }
     this.hideModal = true;

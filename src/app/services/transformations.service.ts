@@ -13,7 +13,7 @@ export class TransformationsService {
   }
 
   getPropertyValue(entity: any, property: string) {
-    if (!property) { return false; }
+    if (!property || !entity) { return false; }
     let props = property.toString().split('.');
     let val = entity;
     if (!val[props[0]]) { props = props.filter(x => x !== props[0]); }

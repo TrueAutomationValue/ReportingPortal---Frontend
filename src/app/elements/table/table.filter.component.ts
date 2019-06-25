@@ -448,6 +448,10 @@ export class TableFilterComponent implements OnInit, AfterViewInit, OnDestroy, O
         case 'text':
           messages.push(this.isTextValid(element.property));
           break;
+        case 'lookup-autocomplete':
+        case 'lookup-colored':
+          messages.push(this.isLookupValid(element.property));
+          break;
         case 'email':
           messages.push(this.isEmailValid(element.property));
           break;
@@ -483,12 +487,22 @@ export class TableFilterComponent implements OnInit, AfterViewInit, OnDestroy, O
   }
 
   isEmailValid(property: string): string {
-    if (this.newEntity[property] && this.newEntity[property] !== '') {
+    const value = this.transformationsService.getPropertyValue(this.newEntity, property);
+    if (value && value !== '') {
       const regExp = new RegExp('(.+@.+[.][A-z]+)');
       return regExp.test(this.newEntity[property]) ? '' : this.emailFieldError;
     }
     return this.emptyFieldError;
   }
+
+  isLookupValid(property: string): string {
+    const value = this.transformationsService.getPropertyValue(this.newEntity, property);
+    if (value && value !== '') {
+      return '';
+    }
+    return this.emptyFieldError;
+  }
+
 
   handleFilterChange(col, $event) {
     this.appliedFilters = this.appliedFilters.filter(x => x.property !== col.property);

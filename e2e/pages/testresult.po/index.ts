@@ -1,7 +1,5 @@
 import { browser } from 'protractor';
-import { baseUrl, elements, names, regexps, columns } from './constants';
-import { BasePage } from '../../base.po';
-import { convertHoursTo24HourFormat, padYear } from './helpers';
+import { BasePage } from '../base.po';
 
 export class TestRunView extends BasePage {
   constructor() {

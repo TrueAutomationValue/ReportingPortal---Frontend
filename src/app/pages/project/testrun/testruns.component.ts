@@ -173,8 +173,8 @@ export class TestRunsComponent implements OnInit {
     this.testrunService.createTestRun($event).subscribe();
   }
 
-  execute($event) {
-    if ($event) {
+  async execute($event) {
+    if (await $event) {
       this.testrunService.removeTestRun(this.testrunToRemove).subscribe(res => {
         this.testRuns = this.testRuns.filter(x => x.id !== this.testrunToRemove.id);
       });

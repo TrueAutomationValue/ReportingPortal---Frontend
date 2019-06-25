@@ -1,8 +1,10 @@
 import { by, Locator, ElementFinder, browser, protractor } from 'protractor';
-import { BaseElement } from './base.element';
-import { logger } from '../../utils/log.util';
-import { Checkbox } from './checkbox.element';
-import { InlineEditor } from './inlineEditor.element';
+import { BaseElement } from '../base.element';
+import { logger } from '../../../utils/log.util';
+import { Checkbox } from '../checkbox.element';
+import { InlineEditor } from '../inlineEditor.element';
+import { Lookup } from '../lookup.element';
+import { Input } from '../input.element';
 
 const EC = protractor.ExpectedConditions;
 
@@ -11,9 +13,23 @@ export class SmartTable extends BaseElement {
         super(locator);
     }
 
-    private creationRow: ElementFinder = this.element.element(by.css('.ft-creation-row'));
-    private creationToggler: ElementFinder = this.element.element(by.css('.ft-create-toggler'));
-    private creationError: ElementFinder = this.element.element(by.css('.ft-create-error'));
+    private creationRow = this.element.element(by.css('.ft-creation-row'));
+    private creationToggler = this.element.element(by.css('.ft-create-toggler'));
+    private creationError = this.element.element(by.css('.ft-create-error'));
+
+    private createRowElements = {
+        confirmPassword: (columnIndex: number) =>
+            new Input(this.creationRow.element(by.xpath(`./td[${columnIndex + 1}]/input[contains(@class,'ft-confirm-password')]`))),
+        password: (columnIndex: number): Input =>
+            new Input(this.creationRow.element(by.xpath(`./td[${columnIndex + 1}]/input[contains(@class,'ft-password')]`))),
+        input: (columnIndex: number): Input =>
+            new Input(this.creationRow.element(by.xpath(`./td[${columnIndex + 1}]/input[@type="text"]`))),
+        checkbox: (columnIndex: number): Checkbox =>
+            new Checkbox(this.creationRow.element(by.xpath(`./td[${columnIndex + 1}]/input[@type="checkbox"]`))),
+        coloredLookup: (columnIndex: number): Lookup =>
+            new Lookup(this.creationRow.element(by.xpath(`./td[${columnIndex + 1}]/lookup-colored`))),
+    };
+
 
     public async openCreation() {
         if (!(await this.isCreationOpened())) {
@@ -36,53 +52,35 @@ export class SmartTable extends BaseElement {
         return '';
     }
 
-    public async fillCreationConfirmPassword(value: string, columnName: string) {
+    public async fillCreation(value: string | boolean | number, columnName: string) {
         const columnIndex = await this.getColumnIndex(columnName);
         if (await this.isCreationOpened()) {
-            const input = this.creationRow
-                .element(by.xpath(`./td[${columnIndex + 1}]/input[contains(@class,'ft-confirm-password')]`));
-            await input.clear();
-            return input.sendKeys(value);
-        }
-
-        throw Error('Creation Row is not opened');
-    }
-
-    public async fillCreationPassword(value: string, columnName: string) {
-        const columnIndex = await this.getColumnIndex(columnName);
-        if (await this.isCreationOpened()) {
-            const input = this.creationRow.element(by.xpath(`./td[${columnIndex + 1}]/input[contains(@class,'ft-password')]`));
-            await input.clear();
-            return input.sendKeys(value);
-        }
-
-        throw Error('Creation Row is not opened');
-    }
-
-    public async fillCreationTextField(value: string, columnName: string) {
-        const columnIndex = await this.getColumnIndex(columnName);
-        if (await this.isCreationOpened()) {
-            const input = this.creationRow.element(by.xpath(`./td[${columnIndex + 1}]/input`));
-            await input.clear();
-            if (value !== '') {
-                return input.sendKeys(value);
+            if (await this.createRowElements.input(columnIndex).element.isPresent()) {
+                return this.createRowElements.input(columnIndex).typeText(value as string);
+            } if (await this.createRowElements.checkbox(columnIndex).element.isPresent()) {
+                return this.createRowElements.checkbox(columnIndex).setState(value as boolean);
+            } if (await this.createRowElements.coloredLookup(columnIndex).element.isPresent()) {
+                return this.createRowElements.coloredLookup(columnIndex).select(value as string);
             }
-            return;
         }
-
         throw Error('Creation Row is not opened');
     }
 
-    public async fillCreationCheckbox(value: boolean | number, columnName: string) {
+    public async fillCreationPassword(value: string | boolean | number, columnName: string) {
         const columnIndex = await this.getColumnIndex(columnName);
         if (await this.isCreationOpened()) {
-            const input = new Checkbox(this.creationRow.element(by.xpath(`./td[${columnIndex + 1}]/input`)));
-            return input.setState(value === 1 || value === true);
+            return this.createRowElements.password(columnIndex).typeText(value as string);
         }
-
         throw Error('Creation Row is not opened');
     }
 
+    public async fillCreationConfirmPassword(value: string | boolean | number, columnName: string) {
+        const columnIndex = await this.getColumnIndex(columnName);
+        if (await this.isCreationOpened()) {
+            return this.createRowElements.confirmPassword(columnIndex).typeText(value as string);
+        }
+        throw Error('Creation Row is not opened');
+    }
 
     public async clickCreateAction() {
         return this.creationRow.element(by.css('.row-action-button')).click();
@@ -165,11 +163,15 @@ export class SmartTable extends BaseElement {
             const cell = await this.getCell(rows[0], columnIndex);
             const inlineEditor: InlineEditor = new InlineEditor(cell.element(by.tagName('inline-editor')));
             const checkbox: Checkbox = new Checkbox(cell.element(by.xpath('.//input[@type="checkbox"]')));
+            const coloredLookup: Lookup = new Lookup(cell.element(by.xpath('.//lookup-colored')));
             if (await inlineEditor.element.isPresent()) {
                 return inlineEditor.changeAndSetValue(value as string);
             }
             if (await checkbox.element.isPresent()) {
                 return checkbox.setState(value as boolean);
+            }
+            if (await coloredLookup.element.isPresent()) {
+                return coloredLookup.select(value as string);
             }
 
             throw new Error('You are trying to edit not editable column!');

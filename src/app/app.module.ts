@@ -7,7 +7,6 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { CookieService, CookieOptions } from 'angular2-cookie/core';
 import { appRouting } from './app.routing';
 import { AuthGuard } from './shared/guards/auth-guard.service';
-import { CanDeactivateGuard } from './shared/guards/can-deactivate-guard.service';
 import { AppComponent } from './app.component';
 import { NgProgressModule, NgProgressBrowserXhr } from 'ngx-progressbar';
 import { AdministrationModule } from './pages/administration/administration.module';
@@ -26,6 +25,7 @@ import { CalcHeightsDirective } from './derectives/bodyHeight.derective';
 import { UserSettingsComponent } from './pages/general/user-settings/user-settings.component';
 import { CustomerModule } from './pages/customer/customer.module';
 import { CustomerService } from './services/customer.service';
+import { PendingChanges } from './shared/guards/can-deactivate-guard.service';
 
 @NgModule({
   imports: [
@@ -50,8 +50,8 @@ import { CustomerService } from './services/customer.service';
     CalcHeightsDirective
   ],
   providers: [
+    PendingChanges,
     AuthGuard,
-    CanDeactivateGuard,
     CookieService,
     LoginGuard,
     GlobalDataService,
