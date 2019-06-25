@@ -16,7 +16,15 @@ export class Lookup extends BaseElement {
         return this.findOption(value).click();
     }
 
+    public async isOptionPresent(value: string) {
+        return this.findOption(value).isPresent();
+    }
+
     private findOption(value: string) {
         return this.element.element(by.xpath(`//*[contains(@class, "selector-suggestions")]//li[@title="${value}"]`));
+    }
+
+    public async isEnabled() {
+        return this.selector.isEnabled();
     }
 }

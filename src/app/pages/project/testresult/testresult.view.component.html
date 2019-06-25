@@ -6,7 +6,7 @@
 <div class="panel-heading clearfix">
   <h2 class="col-sm-10 no-padding" id="test-result-view">Test Result: {{currentState?.id}}</h2>
   <div class="col-sm-2 no-padding">
-    <button *ngIf="userService.IsLocalManager() || userService.IsManager() || userService.IsEngineer()"
+    <button id="save-test-result" *ngIf="userService.IsLocalManager() || userService.IsManager() || userService.IsEngineer()"
       (click)="Update()" class="btn btn-success pull-right">Save</button>
   </div>
 </div>

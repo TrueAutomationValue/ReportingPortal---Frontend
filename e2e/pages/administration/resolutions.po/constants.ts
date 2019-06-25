@@ -19,4 +19,9 @@ export const columns = {
     color: 'Color'
 };
 
+export const colors = {
+    warning: 'Warning',
+    primary: 'Primary'
+};
+
 

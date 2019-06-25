@@ -1,7 +1,8 @@
 import { browser } from 'protractor';
 import { BasePage } from '../base.po';
+import { elements, names, baseUrl } from './constants';
 
-export class TestRunView extends BasePage {
+export class TestResultView extends BasePage {
   constructor() {
     super(elements.uniqueElement, names.pageName);
   }
@@ -10,39 +11,11 @@ export class TestRunView extends BasePage {
     return browser.get(baseUrl(projectId, testRunId));
   }
 
-  async getBuildName() {
-    return await elements.buildNameLink.getText();
+  async setResolution(name: string) {
+    return elements.resolutionSelector.select(name);
   }
 
-  async getMilestone() {
-    return await elements.milestoneField.getAttribute('value');
-  }
-
-  async getTestSuite() {
-    return await elements.testSuiteLink.getText();
-  }
-
-  async setResolution(resolution: string, testName: string) {
-    return await elements.resultsTable.editRow(resolution, columns.resolution, testName, columns.testName);
-  }
-
-  async getResolution(testName: string) {
-    return (await elements.resultsTable.getRowValues(testName, columns.testName))[columns.resolution];
-  }
-
-  async openResult(testName: string) {
-    return await elements.resultsTable.clickRow(testName, columns.testName);
-  }
-
-  async getStartTime() {
-    const startTimeValue = await elements.startTimeLabel.getText();
-    const startDateRegex = new RegExp(regexps.startDateRegexp);
-    const year = padYear(startDateRegex.exec(startTimeValue)['groups'].year);
-    const month = startDateRegex.exec(startTimeValue)['groups'].month - 1;
-    const day = startDateRegex.exec(startTimeValue)['groups'].day;
-    const hours = convertHoursTo24HourFormat(startDateRegex.exec(startTimeValue)
-    ['groups'].hours, startDateRegex.exec(startTimeValue)['groups'].period);
-    const minutes = startDateRegex.exec(startTimeValue)['groups'].minutes;
-    return new Date(year, month, day, hours, minutes);
+  async saveResult() {
+    return elements.saveButton.click();
   }
 }

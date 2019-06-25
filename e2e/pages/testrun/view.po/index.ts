@@ -32,8 +32,16 @@ export class TestRunView extends BasePage {
     return (await elements.resultsTable.getRowValues(testName, columns.testName))[columns.resolution];
   }
 
+  async isResolutionPresent(resolutionName: string, testName: string){
+    const lookup = await elements.resultsTable.getCellLookup(columns.resolution, testName, columns.testName);
+    return lookup.isOptionPresent(resolutionName);
+  }
+
   async openResult(testName: string) {
-    return await elements.resultsTable.clickRow(testName, columns.testName);
+    await elements.resultsTable.clickCell(columns.testName, testName, columns.testName);
+    const handles = await browser.getAllWindowHandles();
+    await browser.switchTo().window(handles[handles.length - 1]);
+    await browser.waitForAngular();
   }
 
   async getStartTime() {

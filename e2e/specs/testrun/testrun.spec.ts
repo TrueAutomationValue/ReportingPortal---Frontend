@@ -3,7 +3,6 @@ import { ProjectList } from '../../pages/project/list.po';
 import { ProjectCreate } from '../../pages/project/create.po';
 import { ProjectView } from '../../pages/project/view.po';
 import { SuiteCreate } from '../../pages/suite/create.po';
-import { SuiteList } from '../../pages/suite/list.po';
 import { TestRunCreate } from '../../pages/testRun/create.po';
 import { TestRunView } from '../../pages/testRun/view.po';
 import { MilestoneCreate } from '../../pages/milestone/create.po';
@@ -17,31 +16,19 @@ import testruns from '../../data/testRuns.json';
 import suites from '../../data/suites.json';
 
 describe('Full Admin Test Run', () => {
-    let logIn: LogIn;
-    let projectList: ProjectList;
-    let projectCreate: ProjectCreate;
-    let projectView: ProjectView;
-    let suiteCreate: SuiteCreate;
-    let suiteList: SuiteList;
-    let testRunCreate: TestRunCreate;
-    let testRunView: TestRunView;
-    let milestoneCreate: MilestoneCreate;
-    let testRunList: TestRunList;
+    const logIn = new LogIn();
+    const projectList = new ProjectList();
+    const projectCreate = new ProjectCreate();
+    const projectView = new ProjectView();
+    const suiteCreate = new SuiteCreate();
+    const testRunCreate = new TestRunCreate();
+    const testRunView = new TestRunView();
+    const milestoneCreate = new MilestoneCreate();
+    const testRunList = new TestRunList();
     let startDateStore: Date;
     const project: Project = projects.testrunProject;
 
     beforeAll(() => {
-        logIn = new LogIn();
-        projectList = new ProjectList();
-        projectCreate = new ProjectCreate();
-        projectView = new ProjectView();
-        suiteCreate = new SuiteCreate();
-        suiteList = new SuiteList();
-        testRunCreate = new TestRunCreate();
-        testRunView = new TestRunView();
-        milestoneCreate = new MilestoneCreate();
-        testRunList = new TestRunList();
-
         logIn.navigateTo();
     });
 
