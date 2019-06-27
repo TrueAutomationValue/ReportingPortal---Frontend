@@ -5,11 +5,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Customer, CustomerAttachment, CustomerComment } from '../../../shared/models/customer';
 import { User } from '../../../shared/models/user';
 import { UserService } from '../../../services/user.services';
-import { saveAs as importedSaveAs } from 'file-saver';
 import { BaseComment } from '../../../shared/models/general';
 import { Project } from '../../../shared/models/project';
 import { ProjectService } from '../../../services/project.service';
 import { TransformationsService } from '../../../services/transformations.service';
+import BlobUtils from '../../../shared/utils/blob.utils';
 
 @Component({
     templateUrl: 'customer-info.component.html',
@@ -97,9 +97,8 @@ export class CustomerInfoComponent implements OnInit {
 
     downloadAttach(attach) {
         this.customerService.downloadCustomerAttachment(attach.id, this.customer.id).subscribe(blob => {
-            importedSaveAs(blob, this.getAttachName(attach));
-        },
-            error => this.getAttachments());
+            BlobUtils.download(blob, this.getAttachName(attach));
+        }, () => this.getAttachments());
     }
 
     getComments() {
