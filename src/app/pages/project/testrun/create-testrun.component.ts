@@ -5,8 +5,6 @@ import { SimpleRequester } from '../../../services/simple-requester';
 import { TestRunService } from '../../../services/testRun.service';
 import { TestSuiteService } from '../../../services/testSuite.service';
 import { MilestoneService } from '../../../services/milestones.service';
-
-
 import { TestSuite } from '../../../shared/models/testSuite';
 import { Milestone } from '../../../shared/models/milestone';
 import { TestRun } from '../../../shared/models/testRun';

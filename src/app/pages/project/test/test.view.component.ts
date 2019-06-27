@@ -87,7 +87,7 @@ export class TestViewComponent implements OnInit {
   }
 
   moveTestOpen() {
-    this.testService.getTest({ test_suite_id: this.test.test_suite_id, project_id: this.test.project_id }).subscribe(res => {
+    this.testService.getTest({ project_id: this.test.project_id }).subscribe(res => {
       this.tests = res;
       this.hideMoveModal = false;
     });

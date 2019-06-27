@@ -2,7 +2,7 @@
   <simple-popup *ngIf="!hideModal" [title]="removeModalTitle" [message]="removeModalMessage" [type]="'warning'"
     [buttons]="[{name:'yes', execute:true }, {name:'no', execute:false}]" (execute)="execute($event)"
     (closed)="wasClosed($event)"></simple-popup>
-  <move-test-modal *ngIf="testSuite.tests && hideMoveModal" [title]="MoveModalTitle"
+  <move-test-modal *ngIf="!hideMoveModal" [title]="MoveModalTitle"
     [tests]="testSuite.tests" [buttons]="[{name:'Move', execute:true }, {name:'Cancel', execute:false}]"
     (execute)="moveToExecute($event)" (closed)="moveToWasClosed($event)"></move-test-modal>
   <div class="row">
