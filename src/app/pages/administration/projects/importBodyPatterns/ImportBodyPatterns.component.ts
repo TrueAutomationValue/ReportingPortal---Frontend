@@ -81,8 +81,8 @@ export class ImportBodyPatternsComponent implements OnInit {
         }, () => { this.loadBodyPatterns(); });
     }
 
-    execute($event) {
-        if ($event) {
+    async execute($event) {
+        if (await $event) {
             this.projectService.removeImportBodyPattern(this.patternToRemove).subscribe(res => {
                 this.loadBodyPatterns();
             });

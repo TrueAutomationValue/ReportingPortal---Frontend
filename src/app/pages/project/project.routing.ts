@@ -30,6 +30,7 @@ import {
 import { TestrunCompareComponent } from './testrun/testrun-compare/testrun-compare.component';
 import { TestrunMatrixComponent } from './testrun/testrun-matrix/testrun-matrix.component';
 import { SuiteDashboardComponent } from './suite-dashboard/suite-dashboard.component';
+import { PendingChanges } from '../../shared/guards/can-deactivate-guard.service';
 
 
 const projectRoutes: Routes = [
@@ -59,7 +60,8 @@ const projectRoutes: Routes = [
           { path: 'tests', component: TestSuiteViewComponent, canActivate: [TestSuiteGuard] },
           { path: 'import', component: ImportComponent, canActivate: [ProjectImportGuard] },
           { path: 'test/:testId', component: TestViewComponent, canActivate: [TestGuard] },
-          { path: 'testresult/:testresultId', component: TestResultViewComponent, canActivate: [TestResultGuard] },
+          { path: 'testresult/:testresultId', component: TestResultViewComponent,
+            canActivate: [TestResultGuard], canDeactivate: [PendingChanges] },
           { path: 'create/milestone', component: CreateMilestoneComponent, canActivate: [CreateMilestoneGuard] },
           { path: 'create/testrun', component: CreateTestRunComponent, canActivate: [CreateTestRunGuard] },
           { path: 'create/testsuite', component: CreateTestSuiteComponent, canActivate: [CreateTestSuiteGuard] },

@@ -152,8 +152,8 @@ export class AdministrationUsersComponent {
         this.hideModal = false;
     }
 
-    execute($event) {
-        if ($event) {
+    async execute($event) {
+        if (await $event) {
             this.userService.removeUser(this.userToRemove).subscribe(() => {
                 this.userService.getUsers().subscribe(users => {
                     this.users = users;

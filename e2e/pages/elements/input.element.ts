@@ -10,4 +10,8 @@ export class Input extends BaseElement {
         await this.element.clear();
         return this.element.sendKeys(value);
     }
+
+    getValue() {
+        return this.element.getAttribute('value');
+    }
 }

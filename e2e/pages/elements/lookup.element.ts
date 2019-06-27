@@ -1,33 +1,30 @@
 import { by, Locator } from 'protractor';
 import { BaseElement } from './base.element';
 
-export class Multiselect extends BaseElement {
+export class Lookup extends BaseElement {
     constructor(locator: Locator) {
         super(locator);
     }
 
-    private search = this.element.element(by.css('.ms-search'));
-    private selector = this.element.element(by.css('.ms-main-selector'));
+    private selector = this.element.element(by.css('.selector-main-button'));
 
     public openSelector() {
         return this.selector.click();
     }
-
-    public async enterValue(value: string) {
+    public async select(value: string) {
         await this.openSelector();
-        return this.search.sendKeys(value);
-    }
-
-    public selectOption(value: string) {
         return this.findOption(value).click();
     }
 
-    public async select(value: string) {
-        await this.enterValue(value);
-        return this.selectOption(value);
+    public async isOptionPresent(value: string) {
+        return this.findOption(value).isPresent();
     }
 
     private findOption(value: string) {
         return this.element.element(by.xpath(`//*[contains(@class, "selector-suggestions")]//li[@title="${value}"]`));
+    }
+
+    public async isEnabled() {
+        return this.selector.isEnabled();
     }
 }

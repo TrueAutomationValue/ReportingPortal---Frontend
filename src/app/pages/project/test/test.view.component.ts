@@ -97,8 +97,8 @@ export class TestViewComponent implements OnInit {
     this.testMovedTo = $event;
   }
 
-  execute($event) {
-    if ($event) {
+  async execute($event) {
+    if (await $event) {
       this.router.navigate([`/project/${this.test.project_id}/test/${this.testMovedTo.id}`]);
       this.testMovedTo = undefined;
     }

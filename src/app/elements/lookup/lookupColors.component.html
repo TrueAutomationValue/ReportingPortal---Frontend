@@ -24,15 +24,15 @@
         </b>
     </div>
     <div *ngIf="!hidden" class="selector-suggestions" [ngClass]="{
-  'cut-long-text': cutLongText
-}">
+        'cut-long-text': cutLongText
+    }">
         <ul>
             <li *ngIf="filteredArray.length === 0 && !allowEmptyValue" class="selector-button btn-default">No items</li>
-            <li tabindex="0" *ngIf="allowEmptyValue" class="selector-button btn-default"
+            <li [title]="placeholder" tabindex="0" *ngIf="allowEmptyValue" class="selector-button btn-default"
                 (mousedown)="select(emptyValue)">
                 {{placeholder}}
             </li>
-            <li tabindex="0" *ngFor="let item of array" (mousedown)="select(item)" class="selector-button" [ngClass]="{
+            <li [title]="textToShow(item)" tabindex="0" *ngFor="let item of array" (mousedown)="select(item)" class="selector-button" [ngClass]="{
       'btn-danger': getColorId(item) === 1,
       'btn-primary': getColorId(item) === 3,
       'btn-warning': getColorId(item) === 2,

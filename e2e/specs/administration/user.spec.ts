@@ -85,7 +85,6 @@ describe('Full Admin Administartion User Flow', () => {
             await expect(userAdministration.getCreationError())
                 // tslint:disable-next-line: max-line-length
                 .toEqual(`Fill all required fields, Email should be equal to this pattern: example@domain.com, Password does not match the Confirm Password.`);
-            // tslint:enable-next-line: max-line-length
         });
 
         it('No errors when everything filled fine', async () => {

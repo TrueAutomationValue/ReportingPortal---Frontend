@@ -7,7 +7,7 @@ interface A1qaLookup {
   allowEmptyValue: boolean;
   propertiesToShow: string[];
   array: any[];
-  model: any[]|any;
+  model: any[] | any;
   disabled: boolean;
   modelChange: EventEmitter<any>;
 
@@ -32,7 +32,7 @@ export class BaseLookupComponent implements OnInit, OnChanges, A1qaLookup {
   constructor(
     public transformations: TransformationsService,
     public datepipe: DatePipe
-  ) {}
+  ) { }
 
   hidden = true;
   filteredArray: any[];
@@ -48,11 +48,11 @@ export class BaseLookupComponent implements OnInit, OnChanges, A1qaLookup {
   @Input() array: any[];
   @Input() model: any;
   @Input() disabled: boolean;
-  @Input() sortBy: {property: string, order: string};
+  @Input() sortBy: { property: string, order: string };
   @Output() modelChange = new EventEmitter();
   selectedItemText: string;
   emptyValue = undefined;
-  emptyValueForFilter = {findEmpty: true};
+  emptyValueForFilter = { findEmpty: true };
 
   toggle() {
     this.hidden = !this.hidden;
@@ -116,7 +116,10 @@ export class BaseLookupComponent implements OnInit, OnChanges, A1qaLookup {
             }
             itemValue = itemValue[prop];
           });
-          if (typeof itemValue === 'number') { itemValue = this.datepipe.transform(new Date(itemValue), 'yyyy-MM-dd hh:mm:ss a'); }
+          if (typeof itemValue === 'number') {
+            console.log(props);
+            itemValue = this.datepipe.transform(new Date(itemValue), 'yyyy-MM-dd hh:mm:ss a');
+          }
           textToShow = `${textToShow} ${itemValue}`;
         });
       } else {
@@ -131,10 +134,10 @@ export class BaseLookupComponent implements OnInit, OnChanges, A1qaLookup {
     if (this.enableSort) {
       if (this.filteredArray && !this.sortBy) {
         this.filteredArray.sort((a, b) => {
-          if (this.textToShow(a).toLowerCase() > this.textToShow(b).toLowerCase() ) {
+          if (this.textToShow(a).toLowerCase() > this.textToShow(b).toLowerCase()) {
             return 1;
           }
-          if (this.textToShow(a).toLowerCase()  < this.textToShow(b).toLowerCase() ) {
+          if (this.textToShow(a).toLowerCase() < this.textToShow(b).toLowerCase()) {
             return -1;
           }
           return 0;

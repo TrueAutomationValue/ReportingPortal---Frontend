@@ -118,8 +118,8 @@ export class AdministrationPermissionsComponent {
     }, error => console.log(error));
   }
 
-  execute($event) {
-    if ($event) {
+  async execute($event) {
+    if (await $event) {
       this.userService.removeProjectUser(this.permissionsToRemove).subscribe(res => {
         this.reloadUsers();
       });

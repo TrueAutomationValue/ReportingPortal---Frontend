@@ -1067,6 +1067,12 @@ textarea.form-control {
   margin-left: 5px;
 }
 
+.line {
+  border-bottom: solid 1px #eee;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
 @-webkit-keyframes spin2 {
   from {
     -webkit-transform: rotate(0deg);
