@@ -1,7 +1,4 @@
-import { Component, OnDestroy, ViewContainerRef, ComponentFactoryResolver, ViewChild, ElementRef, ComponentRef } from '@angular/core';
-import { FileUploader } from 'ng2-file-upload';
-import { Http, Headers, RequestOptions } from '@angular/http';
-import { SimpleRequester } from '../../../services/simple-requester';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ImportBodyPattern } from '../../../shared/models/project';
 import { ProjectService } from '../../../services/project.service';
