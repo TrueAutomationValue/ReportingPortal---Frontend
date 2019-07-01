@@ -1,4 +1,4 @@
-import { by, element, browser, protractor } from 'protractor';
+import { by, element } from 'protractor';
 import { BaseElement } from './base.element';
 
 export class Notification extends BaseElement {

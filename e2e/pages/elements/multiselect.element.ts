@@ -6,14 +6,16 @@ export class Multiselect extends BaseElement {
         super(locator);
     }
 
-    private input = this.element.element(by.tagName('input'));
+    private search = this.element.element(by.css('.ms-search'));
+    private selector = this.element.element(by.css('.ms-main-selector'));
 
     public openSelector() {
-        this.element.click();
+        return this.selector.click();
     }
 
-    public enterValue(value: string) {
-        return this.input.sendKeys(value);
+    public async enterValue(value: string) {
+        await this.openSelector();
+        return this.search.sendKeys(value);
     }
 
     public selectOption(value: string) {
@@ -27,9 +29,5 @@ export class Multiselect extends BaseElement {
 
     private findOption(value: string) {
         return this.element.element(by.xpath(`//*[contains(@class, "selector-suggestions")]//li[@title="${value}"]`));
-    }
-
-    public getValue() {
-        return this.input.getAttribute('value');
     }
 }

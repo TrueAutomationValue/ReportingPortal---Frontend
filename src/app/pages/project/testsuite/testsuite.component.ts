@@ -71,7 +71,7 @@ export class TestSuiteComponent implements OnInit {
   }
 
   async execute($event) {
-    if ($event) {
+    if (await $event) {
       await this.testSuiteService.removeTestSuite(this.testSuiteToRemove).toPromise();
       this.hideModal = true;
       await this.updateSuites();

@@ -106,8 +106,8 @@ export class CustomerComponent implements OnInit {
         this.hideModal = false;
     }
 
-    execute($event) {
-        if ($event) {
+    async execute($event) {
+        if (await $event) {
             this.customerService.removeCustomer(this.customerToRemove).subscribe(() =>
                 this.customers = this.customers.filter(x => x.id !== this.customerToRemove.id));
         }

@@ -1,9 +1,9 @@
 import { browser } from 'protractor';
 import { elements, baseUrl, names, columns } from './constants';
-import { BasePage } from '../../base.po';
 import { User } from '../../../../src/app/shared/models/user';
+import { AdministrationBase } from '../base.po';
 
-export class UserAdministration extends BasePage {
+export class UserAdministration extends AdministrationBase {
   constructor() {
     super(elements.uniqueElement, names.pageName);
   }
@@ -23,19 +23,19 @@ export class UserAdministration extends BasePage {
   }
 
   fillFirstName(value: string) {
-    return elements.usersTable.fillCreationTextField(value, columns.firstName);
+    return elements.usersTable.fillCreation(value, columns.firstName);
   }
 
   fillLastName(value: string) {
-    return elements.usersTable.fillCreationTextField(value, columns.lastName);
+    return elements.usersTable.fillCreation(value, columns.lastName);
   }
 
   fillUserName(value: string) {
-    return elements.usersTable.fillCreationTextField(value, columns.userName);
+    return elements.usersTable.fillCreation(value, columns.userName);
   }
 
   fillEmail(value: string) {
-    return elements.usersTable.fillCreationTextField(value, columns.email);
+    return elements.usersTable.fillCreation(value, columns.email);
   }
 
   fillPassword(value: string) {
@@ -63,27 +63,27 @@ export class UserAdministration extends BasePage {
   }
 
   setAuditAdmin(state: boolean | number) {
-    return elements.usersTable.fillCreationCheckbox(state, columns.auditAdmin);
+    return elements.usersTable.fillCreation(state, columns.auditAdmin);
   }
 
   setAuditor(state: boolean | number) {
-    return elements.usersTable.fillCreationCheckbox(state, columns.auditor);
+    return elements.usersTable.fillCreation(state, columns.auditor);
   }
 
   setCoordinator(state: boolean | number) {
-    return elements.usersTable.fillCreationCheckbox(state, columns.coordinator);
+    return elements.usersTable.fillCreation(state, columns.coordinator);
   }
 
   setAdmin(state: boolean | number) {
-    return elements.usersTable.fillCreationCheckbox(state, columns.admin);
+    return elements.usersTable.fillCreation(state, columns.admin);
   }
 
   setAccountManager(state: boolean | number) {
-    return elements.usersTable.fillCreationCheckbox(state, columns.accountManager);
+    return elements.usersTable.fillCreation(state, columns.accountManager);
   }
 
   setUnitCoordinator(state: boolean | number) {
-    return elements.usersTable.fillCreationCheckbox(state, columns.unitCoordinator);
+    return elements.usersTable.fillCreation(state, columns.unitCoordinator);
   }
 
   isUserDisplayed(user_name: string): any {

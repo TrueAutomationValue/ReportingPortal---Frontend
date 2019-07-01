@@ -1,15 +1,16 @@
 import { by, Locator } from 'protractor';
 import { BaseElement } from './base.element';
+import { Input } from './input.element';
 
 export class Autocomplete extends BaseElement {
     constructor(locator: Locator) {
         super(locator);
     }
 
-    private input = this.element.element(by.tagName('input'));
+    private input = new Input(this.element.element(by.tagName('input')));
 
     public enterValue(value: string) {
-        return this.input.sendKeys(value);
+        return this.input.typeText(value);
     }
 
     public selectOption(value: string) {
@@ -26,6 +27,6 @@ export class Autocomplete extends BaseElement {
     }
 
     public getValue() {
-        return this.input.getAttribute('value');
+        return this.input.getValue();
     }
 }

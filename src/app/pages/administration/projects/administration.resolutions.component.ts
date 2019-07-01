@@ -16,7 +16,6 @@ import { TransformationsService } from '../../../services/transformations.servic
   ]
 })
 export class AdministrationResolutionsComponent {
-
   hideModal = true;
   removeModalTitle: string;
   removeModalMessage: string;
@@ -25,15 +24,14 @@ export class AdministrationResolutionsComponent {
   selectedProject: Project;
   resolutions: ResultResolution[];
   colors = [
-    {id: 1, name: 'Danger'},
-    {id: 2, name: 'Warning'},
-    {id: 3, name: 'Primary'},
-    {id: 4, name: 'Info'},
-    {id: 5, name: 'Success'}];
+    { id: 1, title: 'Danger', color: 1 },
+    { id: 2, title: 'Warning', color: 2 },
+    { id: 3, title: 'Primary', color: 3 },
+    { id: 4, title: 'Info', color: 4 },
+    { id: 5, title: 'Success', color: 5 }];
   public sortBy = 'name';
   public sortOrder = 'asc';
-  public newColor= {id: 3, name: 'Primary'};
-  public newName= '';
+  public tbCols: any[];
 
   constructor(
     private projectService: ProjectService,
@@ -43,6 +41,26 @@ export class AdministrationResolutionsComponent {
       this.projects = result;
       this.selectedProject = this.projects[0];
       this.updateResolutions();
+      this.tbCols = [
+        {
+          name: 'Name',
+          property: 'name',
+          filter: true,
+          sorting: true,
+          type: 'text',
+          editable: true
+        },
+        {
+          name: 'Color',
+          entity: 'colorObject',
+          property: 'colorObject.title',
+          filter: true,
+          sorting: true,
+          type: 'lookup-colored',
+          editable: true,
+          values: this.colors
+        }
+      ];
     }, error => console.log(error));
   }
 
@@ -51,14 +69,23 @@ export class AdministrationResolutionsComponent {
     this.updateResolutions();
   }
 
-  public createResolution() {
+  public handleAction($event) {
+    switch ($event.action) {
+      case 'create':
+        return this.createResolution($event.entity);
+      case 'remove':
+        return this.removeResolution($event.entity);
+    }
+  }
+
+  public createResolution($event) {
     this.resolutionsService.createOrUpdateResolution({
-      name: this.newName,
-      color: this.newColor.id,
-      project_id: this.selectedProject.id
-    }).subscribe(res => {
+      id: $event.id,
+      project_id: this.selectedProject.id,
+      name: $event.name,
+      color: $event.colorObject.color
+    }).subscribe(() => {
       this.updateResolutions();
-      this.newName = '';
     });
   }
 
@@ -83,12 +110,17 @@ export class AdministrationResolutionsComponent {
   updateResolutions() {
     this.resolutionsService.getResolution(this.selectedProject.id).subscribe(res => {
       this.resolutions = res;
+      for (let i = 0; i < this.resolutions.length; i++) {
+        this.resolutions[i]['colorObject'] = this.colors.find(x => x.id === this.resolutions[i].color);
+        this.resolutions[i]['constantRow'] = this.resolutions[i].project_id === null || this.resolutions[i].project_id === undefined;
+      }
+      console.log(this.resolutions);
     }, error => console.log(error));
   }
 
-  execute($event) {
-    if ($event) {
-      this.resolutionsService.removeResolution(this.resolutionToRemove).subscribe(res => this.updateResolutions());
+  async execute($event) {
+    if (await $event) {
+      this.resolutionsService.removeResolution(this.resolutionToRemove).subscribe(() => this.updateResolutions());
     }
     this.hideModal = true;
   }
