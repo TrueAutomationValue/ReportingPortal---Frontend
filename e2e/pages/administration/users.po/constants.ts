@@ -9,7 +9,7 @@ export const elements = {
 };
 
 export const names = {
-    pageName: 'Login Page'
+    pageName: 'Users Page'
 };
 
 export const columns = {

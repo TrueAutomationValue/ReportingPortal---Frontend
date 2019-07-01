@@ -13,7 +13,6 @@ import { SimpleRequester } from '../../../../services/simple-requester';
     ]
 })
 export class MoveTestModalComponent extends BasePopupComponent implements OnInit {
-    @Input() isHidden: boolean;
     @Input() title: string;
     @Input() type = '';
     @Input() buttons: any[];

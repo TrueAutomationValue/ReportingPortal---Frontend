@@ -122,8 +122,8 @@ export class ProjectComponent {
     this.hideModal = false;
   }
 
-  execute($event) {
-    if ($event) {
+  async execute($event) {
+    if (await $event) {
       this.projectService.removeProject(this.projectToRemove).subscribe(() =>
         this.projects = this.projects.filter(x => x.id !== this.projectToRemove.id));
     }

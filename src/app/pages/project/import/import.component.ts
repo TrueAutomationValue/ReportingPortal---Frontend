@@ -1,7 +1,4 @@
-import { Component, OnDestroy, ViewContainerRef, ComponentFactoryResolver, ViewChild, ElementRef, ComponentRef } from '@angular/core';
-import { FileUploader } from 'ng2-file-upload';
-import { Http, Headers, RequestOptions } from '@angular/http';
-import { SimpleRequester } from '../../../services/simple-requester';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ImportBodyPattern } from '../../../shared/models/project';
 import { ProjectService } from '../../../services/project.service';
@@ -45,7 +42,13 @@ export class ImportComponent {
   buildName = '';
   singleTestRun = false;
   placeholder = 'Select Import Type';
-  imports: string[] = ['MSTest (.trx)', 'Robot (.xml)', 'TestNG (.xml)', 'Cucumber (.json)', 'PHP Codeception (.xml)', 'NUnit v2 (.xml)'];
+  imports: string[] = ['MSTest (.trx)',
+    'Robot (.xml)',
+    'TestNG (.xml)',
+    'Cucumber (.json)',
+    'PHP Codeception (.xml)',
+    'NUnit v2 (.xml)',
+    'NUnit v3 (.xml)'];
   importResults: Import[];
   resultsColumnsToShow: any[];
   timerToken: any;
@@ -213,6 +216,8 @@ export class ImportComponent {
         return 'PHPCodeception';
       case 'NUnit v2 (.xml)':
         return 'NUnit_v2';
+      case 'NUnit v3 (.xml)':
+        return 'NUnit_v3';
     }
   }
 
@@ -237,7 +242,10 @@ export class ImportComponent {
   reqMark(field: string) {
     switch (field) {
       case 'suite':
-        return this.format === 'MSTest (.trx)' || this.format === 'Cucumber (.json)' || this.singleTestRun;
+        return this.format === 'MSTest (.trx)'
+          || this.format === 'Cucumber (.json)'
+          || this.format === 'NUnit v3 (.xml)'
+          || this.singleTestRun;
       case 'executor':
       case 'buildName':
         return this.singleTestRun;

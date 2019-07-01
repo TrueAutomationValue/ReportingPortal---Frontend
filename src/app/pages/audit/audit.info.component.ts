@@ -4,13 +4,11 @@ import { AuditService } from '../../services/audits.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user.services';
 import { User } from '../../shared/models/user';
-import { saveAs as importedSaveAs } from 'file-saver';
 import { BaseComment } from '../../shared/models/general';
 import { DatepickerOptions } from 'custom-a1qa-ng2-datepicker';
 import * as enLocale from 'date-fns/locale/en';
 import { TransformationsService } from '../../services/transformations.service';
-
-
+import BlobUtils from '../../shared/utils/blob.utils';
 
 @Component({
   templateUrl: './audit.info.component.html',
@@ -115,9 +113,8 @@ export class AuditInfoComponent {
 
   downloadAttach(attach) {
     this.auditService.downloadAuditAttachment(attach.id, this.audit.project.id).subscribe(blob => {
-      importedSaveAs(blob, this.getAttachName(attach));
-    },
-      error => this.getAttachments());
+      BlobUtils.download(blob, this.getAttachName(attach));
+    }, () => this.getAttachments());
   }
 
   getAttachName(attach: AuditAttachment) {

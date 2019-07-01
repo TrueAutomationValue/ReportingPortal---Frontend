@@ -13,4 +13,8 @@ export class TestRunList extends BasePage {
     async isTestRunRowDisplayed(buildName: string) {
         return elements.testRunsTable.isRowExists(buildName, 'Build');
     }
+
+    async openTestRun(buildName: string) {
+        return elements.testRunsTable.clickRow(buildName, 'Build');
+    }
 }

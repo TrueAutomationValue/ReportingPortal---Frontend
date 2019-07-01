@@ -1,4 +1,4 @@
-<move-test-modal *ngIf="test && tests" [(isHidden)]="hideMoveModal" [title]="MoveModalTitle" [testMoveFrom]="test" (testMovedTo)="movedTo($event)"
+<move-test-modal *ngIf="!hideMoveModal" [title]="MoveModalTitle" [testMoveFrom]="test" (testMovedTo)="movedTo($event)"
   [tests]="tests" [buttons]="[{name:'Move', execute:true }, {name:'Cancel', execute:false}]" (execute)="execute($event)" (closed)="wasClosed($event)"></move-test-modal>
 <div class="panel-heading page result-search-margin">
   <div class="row clearfix">
