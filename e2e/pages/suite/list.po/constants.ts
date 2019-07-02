@@ -11,3 +11,7 @@ export const elements = {
 export const names = {
     pageName: 'Suite List Page'
 };
+
+export const columns = {
+    name: 'Name'
+};

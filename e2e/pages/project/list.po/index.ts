@@ -1,5 +1,5 @@
 import { browser } from 'protractor';
-import { baseUrl, elements, names } from './constants';
+import { baseUrl, elements, names, columns } from './constants';
 import { BasePage } from '../../base.po';
 
 export class ProjectList extends BasePage {
@@ -12,24 +12,23 @@ export class ProjectList extends BasePage {
     }
 
     isProjectInList(projectName: string) {
-        return elements.projectsTable.isRowExists(projectName, 'Name');
+        return elements.projectsTable.isRowExists(projectName, columns.name);
     }
 
-    async openProject(projectName: string) {
-        const rows = await elements.projectsTable.getRows(projectName, 'Name');
-        return rows[0].click();
+    openProject(projectName: string) {
+        return elements.projectsTable.clickRow(projectName, columns.name);
     }
 
     isCreateProjectExists() {
         return elements.createButton.isPresent();
     }
 
-    async clickCreateProjectButton() {
-        await elements.createButton.click();
+    clickCreateProjectButton() {
+        return elements.createButton.click();
     }
 
-    async clickRemoveProjectButton(projectName: string) {
-        await elements.projectsTable.clickAction(projectName, 'Name');
+    clickRemoveProjectButton(projectName: string) {
+        return elements.projectsTable.clickAction(projectName, columns.name);
     }
 
     async removeProject(projectName: string) {

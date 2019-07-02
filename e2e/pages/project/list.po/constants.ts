@@ -12,3 +12,7 @@ export const elements = {
 export const names = {
   pageName: 'Product List Page'
 };
+
+export const columns = {
+  name: 'Name'
+};

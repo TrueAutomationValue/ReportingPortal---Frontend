@@ -14,7 +14,9 @@ exports.config = {
       args: [
         '--no-sandbox',
         '--disable-dev-shm-usage',
-        '--headless'
+        '--headless',
+        '--disable-gpu',
+        '--window-size=1920,1080'
     ]}
   },
   directConnect: true,
