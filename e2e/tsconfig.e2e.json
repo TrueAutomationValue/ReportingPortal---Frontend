@@ -5,8 +5,6 @@
     "baseUrl": "./",
     "module": "commonjs",
     "target": "es6",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
     "types": [
       "jasmine",
       "jasminewd2",

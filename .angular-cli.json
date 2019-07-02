@@ -31,16 +31,7 @@
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
-        "prod": "environments/environment.prod.ts",
-        "test": "environments/environment.test.ts",
-        "realconnex": "environments/environment.realconnex.ts",
-        "whrqa": "environments/environment.whrqa.ts",
-        "iota": "environments/environment.iota.ts",
-        "theeconomist": "environments/environment.theeconomist.ts",
-        "madness": "environments/environment.madness.ts",
-        "waters": "environments/environment.waters.ts",
-        "tradestops": "environments/environment.tradestops.ts",
-        "wren": "environments/environment.wren.ts"
+        "prod": "environments/environment.prod.ts"
       }
     }
   ],

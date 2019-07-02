@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { BasePopupComponent } from '../../../../elements/modals/basePopup.component';
 import { TestResult } from '../../../../shared/models/test-result';
-import * as jsPDF from 'jspdf';
+import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { TestRun } from '../../../../shared/models/testRun';
 import { TestRunService } from '../../../../services/testRun.service';
