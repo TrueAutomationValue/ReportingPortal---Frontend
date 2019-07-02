@@ -11,8 +11,11 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
     chromeOptions: {
-      args: ['--no-sandbox']
-    }
+      args: [
+        '--no-sandbox',
+        '--disable-dev-shm-usage',
+        '--headless'
+    ]}
   },
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
