@@ -4,7 +4,9 @@
     "outDir": "../out-tsc/e2e",
     "baseUrl": "./",
     "module": "commonjs",
-    "target": "es6",
+    "target": "es2015",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
     "types": [
       "jasmine",
       "jasminewd2",

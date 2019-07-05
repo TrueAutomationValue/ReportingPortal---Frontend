@@ -3,10 +3,10 @@ import { ProjectList } from '../../pages/project/list.po';
 import { ProjectCreate } from '../../pages/project/create.po';
 import { ProjectView } from '../../pages/project/view.po';
 import { SuiteCreate } from '../../pages/suite/create.po';
-import { TestRunCreate } from '../../pages/testRun/create.po';
-import { TestRunView } from '../../pages/testRun/view.po';
+import { TestRunCreate } from '../../pages/testrun/create.po';
+import { TestRunView } from '../../pages/testrun/view.po';
 import { MilestoneCreate } from '../../pages/milestone/create.po';
-import { TestRunList } from '../../pages/testRun/list.po';
+import { TestRunList } from '../../pages/testrun/list.po';
 import { Project } from '../../../src/app/shared/models/project';
 
 import users from '../../data/users.json';
