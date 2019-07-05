@@ -1,5 +1,5 @@
 import { LogIn } from '../pages/login.po';
-import users from '../data/users.json';
+import * as users from '../data/users.json';
 
 describe('Log in', () => {
   let logInPage: LogIn;
