@@ -44,7 +44,7 @@ jobs:
             set -x
             docker-compose up -d
             docker run --network container:reportingportal_tomcat_1 \
-              appropriate/curl --retry 10 --retry-delay 60 --retry-connrefused http://localhost:8080/api/authInfo
+              appropriate/curl --retry 20 --retry-delay 60 --retry-connrefused http://localhost:8080/api/authInfo
 
       - run:
           name: Run tests
