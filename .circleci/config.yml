@@ -43,7 +43,7 @@ jobs:
             cd ReportingPortal
             set -x
             docker-compose up -d
-            docker run --network container:repo_reportingportal_tomcat_1 \
+            docker run --network container:reportingportal_tomcat_1 \
               appropriate/curl --retry 10 --retry-delay 60 --retry-connrefused http://localhost:8080/api/authInfo
 
       - run:
@@ -51,6 +51,6 @@ jobs:
           command: |
             cd ..
             docker build . -t tests
-            docker run --network container:repo_reportingportal_tomcat_1 \
+            docker run --network container:reportingportal_tomcat_1 \
               tests
 
