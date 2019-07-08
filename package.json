@@ -11,7 +11,7 @@
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "e2e:local": "ng e2e",
-    "e2e:test": "ng e2e --environment test"
+    "e2e:test": "ng e2e --environment=test --config=protractor.headless.conf.js"
   },
   "private": true,
   "dependencies": {
