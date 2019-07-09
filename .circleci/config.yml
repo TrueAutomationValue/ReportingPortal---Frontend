@@ -1,28 +1,56 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
+
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/node:10.15.3
 
     working_directory: ~/repo
 
     steps:
       - checkout
+      - setup_remote_docker
 
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm install
+      - run:
+          name: Install dependencies
+          command: npm install
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm run build:prod
+      - run: 
+          name: Install docker-compose
+          command: |
+            set -x
+            curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+
+      - run:
+          name: Clone ReportingPortal
+          command:  |
+            git clone https://github.com/TrueAutomationValue/ReportingPortal.git
+            
+      - run:
+          name: Start docker-compose
+          command:  |
+            cd ReportingPortal
+            set -x
+            docker-compose build --build-arg BRANCH=${CIRCLE_BRANCH} update
+            docker-compose up -d
+            docker run --network container:reportingportal_tomcat_1 \
+              appropriate/curl --retry 20 --retry-delay 60 --retry-connrefused http://localhost:8080/api/authInfo
+
+      - run:
+          name: Run tests
+          command: |
+            docker build . -t tests
+            docker run --network container:reportingportal_tomcat_1 \
+              tests
+

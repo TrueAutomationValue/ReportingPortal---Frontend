@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  host: 'http://localhost:8888/api'
+  host: 'http://tomcat:8080/api'
 };
