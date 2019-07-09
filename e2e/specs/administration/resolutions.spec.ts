@@ -19,7 +19,7 @@ import users from '../../data/users.json';
 import projects from '../../data/projects.json';
 import suites from '../../data/suites.json';
 import tests from '../../data/tests.json';
-import testruns from '../../data/testruns.json';
+import testruns from '../../data/testRuns.json';
 import resolutions from '../../data/resolutions.json';
 
 describe('Full Admin Administartion Resolution Flow', () => {

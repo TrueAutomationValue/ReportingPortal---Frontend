@@ -9,10 +9,19 @@ exports.config = {
     './e2e/**/*.spec.ts'
   ],
   capabilities: {
-    browserName: 'chrome'
+    browserName: 'chrome',
+    chromeOptions: {
+      args: [
+        '--no-sandbox',
+        '--disable-dev-shm-usage',
+        '--headless',
+        '--disable-gpu',
+        '--window-size=1366,768',
+        '--disable-web-security'
+    ]}
   },
   directConnect: true,
-  baseUrl: 'http://localhost:8888/',
+  baseUrl: 'http://localhost:8080/',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,

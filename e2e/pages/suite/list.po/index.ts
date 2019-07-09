@@ -1,4 +1,4 @@
-import { elements, names } from './constants';
+import { elements, names, columns } from './constants';
 import { BasePage } from '../../base.po';
 
 export class SuiteList extends BasePage {
@@ -7,15 +7,14 @@ export class SuiteList extends BasePage {
     }
 
     isTestSuitePresent(name: string): any {
-        return elements.testSuiteTable.isRowExists(name, 'Name');
+        return elements.testSuiteTable.isRowExists(name, columns.name);
     }
 
-    async clickTestSuite(name: string) {
-        const rows = await elements.testSuiteTable.getRows(name, 'Name');
-        await rows[0].click();
+    clickTestSuite(name: string) {
+        return elements.testSuiteTable.clickRow(name, columns.name);
     }
 
     clickRemoveSuiteButton(name: string) {
-        return elements.testSuiteTable.clickAction(name, 'Name');
+        return elements.testSuiteTable.clickAction(name, columns.name);
     }
 }
