@@ -17,7 +17,7 @@
                             <button *ngIf="columnManagement && !allowCreate"
                                 class="btn btn-sm btn-default ft-header-button" title="Manage Columns"
                                 (click)="manageColumns()"><span class="glyphicon glyphicon-th"></span></button>
-                            <button *ngIf="allowRefresh" class="btn btn-sm ft-header-button"
+                            <button *ngIf="allowRefresh" class="btn btn-sm ft-header-button ft-refresh"
                                 title="Refresh (double click to enable)" (click)="hitRefresh()"
                                 (dblclick)="refreshAlways()" [ngClass]="{
                                 'btn-success' : animate,

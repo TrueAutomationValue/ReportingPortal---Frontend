@@ -1,8 +1,9 @@
 import { by, Locator } from 'protractor';
 import { BaseElement } from './base.element';
 import { Input } from './input.element';
+import { WithSearch } from './interfaces/elementWithSearch';
 
-export class Autocomplete extends BaseElement {
+export class Autocomplete extends BaseElement implements WithSearch {
     constructor(locator: Locator) {
         super(locator);
     }
@@ -23,7 +24,7 @@ export class Autocomplete extends BaseElement {
     }
 
     private findOption(value: string) {
-        return this.element.element(by.xpath(`//*[contains(@class, "selector-suggestions")]//li[@title="${value}"]`));
+        return this.element.element(by.xpath(`.//*[contains(@class, "selector-suggestions")]//li[@title="${value}"]`));
     }
 
     public getValue() {

@@ -56,7 +56,7 @@ export class TestRunsComponent implements OnInit {
     this.testRun = {
       project_id: this.route.snapshot.params['projectId']
     };
-    await this.milestoneService.getMilestone({ project_id: this.route.snapshot.params['projectId'] }).subscribe(res => {
+    await this.milestoneService.getMilestone({ project_id: this.route.snapshot.params['projectId'] }).then(res => {
       this.milestones = res;
     });
     await this.testrunService.getTestsRunLabels(0).subscribe(res => {
@@ -67,7 +67,7 @@ export class TestRunsComponent implements OnInit {
     });
     await this.testrunService.getTestsRunStats({ project_id: this.route.snapshot.params['projectId'] }).then(res => {
       this.testRunStats = res;
-      this.testrunService.getTestRun({ project_id: this.route.snapshot.params['projectId'] }).subscribe(result => {
+      this.testrunService.getTestRun({ project_id: this.route.snapshot.params['projectId'] }).then(result => {
         this.testRuns = result;
         this.testRuns.forEach(run => {
           if (run.finish_time && run.start_time) {
@@ -170,12 +170,12 @@ export class TestRunsComponent implements OnInit {
   }
 
   testRunUpdate($event) {
-    this.testrunService.createTestRun($event).subscribe();
+    this.testrunService.createTestRun($event).then();
   }
 
   async execute($event) {
     if (await $event) {
-      this.testrunService.removeTestRun(this.testrunToRemove).subscribe(res => {
+      this.testrunService.removeTestRun(this.testrunToRemove).then(() => {
         this.testRuns = this.testRuns.filter(x => x.id !== this.testrunToRemove.id);
       });
     }
@@ -203,7 +203,7 @@ export class TestRunsComponent implements OnInit {
       ? new Date(this.route.snapshot.queryParamMap.get('f_start_time_to')).toISOString()
       : '';
     let data: TestResultStat[];
-    this.testResultsService.getTestResultsStat(this.route.snapshot.params['projectId'], from, to).subscribe(res => {
+    this.testResultsService.getTestResultsStat(this.route.snapshot.params['projectId'], from, to).then(res => {
       data = res;
       this.downloadCSV(data, columns);
     });

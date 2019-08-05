@@ -57,116 +57,113 @@ export class ResultGridComponent implements OnInit {
   ngOnInit() {
     this.userService.HaveAnyLocalPermissionsExceptViewer(this.route.snapshot.params['projectId']).then(resolve =>
       this.canEdit = this.userService.IsManager() || resolve);
-    this.resultResolutionService.getResolution().subscribe(resolutions => {
+    this.resultResolutionService.getResolution().subscribe(async resolutions => {
       this.testResults.forEach(result => {
         if (result.final_result.color === 5) { result.test_resolution = undefined; }
         result['duration'] = this.calculateDuration(result);
       });
       this.listOfResolutions = resolutions;
-      this.finalResultService.getFinalResult({}).subscribe(finalResults => {
-        this.finalResults = finalResults;
-        this.testRunService.getTestRun({ project_id: this.route.snapshot.params['projectId'] }).subscribe(testruns => {
-          this.userService.getProjectUsers(this.route.snapshot.params['projectId']).subscribe(projectUsers => {
-            this.users = projectUsers.filter(x => x.admin === 1 || x.manager === 1 || x.engineer === 1);
-            this.testResults.forEach(result => {
-              result['developer'] = this.users.find(x => x.user_id === result.test.developer_id);
-              result['testrun'] = testruns.find(x => x.id === result.test_run_id);
-            });
-            this.allColumns = [
-              { name: 'Started', property: 'start_date', filter: true, sorting: true, type: 'date', editable: false, class: 'fit' },
-              { name: 'Build Name', property: 'testrun.build_name', filter: true, sorting: true, type: 'text', class: 'ft-width-150' },
-              {
-                name: 'Test Name',
-                property: 'test.name',
-                filter: true,
-                sorting: true,
-                type: 'text',
-                editable: false,
-                class: 'ft-width-150'
-              },
-              {
-                name: 'Fail Reason',
-                property: 'fail_reason',
-                filter: true,
-                sorting: true,
-                type: 'long-text',
-                editable: false,
-                listeners: ['contextmenu'],
-                class: 'ft-width-250'
-              },
-              {
-                name: 'Result',
-                property: 'final_result.name',
-                filter: true,
-                sorting: true,
-                type: 'lookup-colored',
-                entity: 'final_result',
-                values: this.finalResults,
-                editable: false,
-                class: 'fit'
-              },
-              {
-                name: 'Resolution',
-                property: 'test_resolution.name',
-                filter: true,
-                sorting: true,
-                type: 'lookup-colored',
-                entity: 'test_resolution',
-                allowEmpty: false,
-                values: this.listOfResolutions,
-                editable: this.canEdit,
-                bulkEdit: true,
-                class: 'fit'
-              },
-              {
-                name: 'Assignee',
-                property: 'assigned_user.user',
-                filter: true,
-                sorting: false,
-                type: 'lookup-autocomplete',
-                propToShow: ['user.first_name', 'user.second_name'],
-                entity: 'assigned_user',
-                allowEmpty: true,
-                nullFilter: true,
-                objectWithId: 'assigned_user.user',
-                values: this.users,
-                editable: this.canEdit,
-                bulkEdit: true,
-                class: 'fit'
-              },
-              {
-                name: 'Comment',
-                property: 'comment',
-                filter: true,
-                sorting: false,
-                type: 'textarea',
-                editable: this.canEdit,
-                bulkEdit: true,
-                class: 'ft-width-150'
-              },
-              {
-                name: 'Developer',
-                property: 'developer.user',
-                filter: true,
-                sorting: false,
-                type: 'lookup-autocomplete',
-                propToShow: ['user.first_name', 'user.second_name'],
-                entity: 'developer',
-                nullFilter: true,
-                objectWithId: 'developer.user',
-                values: this.users,
-                editable: false,
-                class: 'fit'
-              },
-              { name: 'Finished', property: 'finish_date', filter: true, sorting: true, type: 'date', editable: false, class: 'fit' },
-              { name: 'Updated', property: 'updated', filter: true, sorting: true, type: 'date', editable: false, class: 'fit' },
-              { name: 'Duration', property: 'duration', filter: true, sorting: true, type: 'time', editable: false, class: 'fit' },
-              { name: 'Debug', property: 'debug', filter: false, sorting: true, type: 'checkbox', editable: this.canEdit, class: 'fit' }
-            ];
-            this.tbCols = this.allColumns.filter(x => this.showOnly.includes(x.name));
-            this.tbHiddenCols = this.allColumns.filter(x => !this.showOnly.includes(x.name));
-          });
+      this.finalResults = await this.finalResultService.getFinalResult({});
+      const testruns = await this.testRunService.getTestRun({ project_id: this.route.snapshot.params['projectId'] });
+      this.userService.getProjectUsers(this.route.snapshot.params['projectId']).subscribe(projectUsers => {
+        this.users = projectUsers.filter(x => x.admin === 1 || x.manager === 1 || x.engineer === 1);
+        this.testResults.forEach(result => {
+          result['developer'] = this.users.find(x => x.user_id === result.test.developer_id);
+          result['testrun'] = testruns.find(x => x.id === result.test_run_id);
         });
+        this.allColumns = [
+          { name: 'Started', property: 'start_date', filter: true, sorting: true, type: 'date', editable: false, class: 'fit' },
+          { name: 'Build Name', property: 'testrun.build_name', filter: true, sorting: true, type: 'text', class: 'ft-width-150' },
+          {
+            name: 'Test Name',
+            property: 'test.name',
+            filter: true,
+            sorting: true,
+            type: 'text',
+            editable: false,
+            class: 'ft-width-150'
+          },
+          {
+            name: 'Fail Reason',
+            property: 'fail_reason',
+            filter: true,
+            sorting: true,
+            type: 'long-text',
+            editable: false,
+            listeners: ['contextmenu'],
+            class: 'ft-width-250'
+          },
+          {
+            name: 'Result',
+            property: 'final_result.name',
+            filter: true,
+            sorting: true,
+            type: 'lookup-colored',
+            entity: 'final_result',
+            values: this.finalResults,
+            editable: false,
+            class: 'fit'
+          },
+          {
+            name: 'Resolution',
+            property: 'test_resolution.name',
+            filter: true,
+            sorting: true,
+            type: 'lookup-colored',
+            entity: 'test_resolution',
+            allowEmpty: false,
+            values: this.listOfResolutions,
+            editable: this.canEdit,
+            bulkEdit: true,
+            class: 'fit'
+          },
+          {
+            name: 'Assignee',
+            property: 'assigned_user.user',
+            filter: true,
+            sorting: false,
+            type: 'lookup-autocomplete',
+            propToShow: ['user.first_name', 'user.second_name'],
+            entity: 'assigned_user',
+            allowEmpty: true,
+            nullFilter: true,
+            objectWithId: 'assigned_user.user',
+            values: this.users,
+            editable: this.canEdit,
+            bulkEdit: true,
+            class: 'fit'
+          },
+          {
+            name: 'Comment',
+            property: 'comment',
+            filter: true,
+            sorting: false,
+            type: 'textarea',
+            editable: this.canEdit,
+            bulkEdit: true,
+            class: 'ft-width-150'
+          },
+          {
+            name: 'Developer',
+            property: 'developer.user',
+            filter: true,
+            sorting: false,
+            type: 'lookup-autocomplete',
+            propToShow: ['user.first_name', 'user.second_name'],
+            entity: 'developer',
+            nullFilter: true,
+            objectWithId: 'developer.user',
+            values: this.users,
+            editable: false,
+            class: 'fit'
+          },
+          { name: 'Finished', property: 'finish_date', filter: true, sorting: true, type: 'date', editable: false, class: 'fit' },
+          { name: 'Updated', property: 'updated', filter: true, sorting: true, type: 'date', editable: false, class: 'fit' },
+          { name: 'Duration', property: 'duration', filter: true, sorting: true, type: 'time', editable: false, class: 'fit' },
+          { name: 'Debug', property: 'debug', filter: false, sorting: true, type: 'checkbox', editable: this.canEdit, class: 'fit' }
+        ];
+        this.tbCols = this.allColumns.filter(x => this.showOnly.includes(x.name));
+        this.tbHiddenCols = this.allColumns.filter(x => !this.showOnly.includes(x.name));
       });
     }, error => console.log(error));
   }
@@ -175,7 +172,7 @@ export class ResultGridComponent implements OnInit {
     window.open(`#/project/${this.route.snapshot.params['projectId']}/testresult/${$event.id}`);
   }
 
-  resultUpdate(result: TestResult) {
+  async resultUpdate(result: TestResult) {
     const testResultUpdateTemplate: TestResult = {
       id: result.id,
       test_id: result.test.id,
@@ -185,19 +182,16 @@ export class ResultGridComponent implements OnInit {
       debug: result.debug,
       assignee: result.assigned_user ? result.assigned_user.user_id : undefined
     };
-    this.testResultService.createTestResult(testResultUpdateTemplate, false).subscribe(() => {
-      this.resultUpdated.emit(result);
-    });
+    await this.testResultService.createTestResult(testResultUpdateTemplate)
+    this.resultUpdated.emit(result);
   }
 
   bulkResultUpdate(results: TestResult[]) {
-    this.testResultService.bulkUpdate(results).subscribe();
+    return this.testResultService.bulkUpdate(results);
   }
 
-  getResults(testResultTemplate: TestResult) {
-    this.testResultService.getTestResult(testResultTemplate).subscribe(result => {
-      this.testResults = result;
-    });
+  async getResults(testResultTemplate: TestResult) {
+    this.testResults = await this.testResultService.getTestResult(testResultTemplate);
   }
 
   openTestResult(testResultId: number) {

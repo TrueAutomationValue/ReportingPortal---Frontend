@@ -70,14 +70,13 @@ export class CustomerInfoComponent implements OnInit {
         this.router.navigate([`/project/${$event.id}`]);
     }
 
-    createProject(event: Project) {
+    async createProject(event: Project) {
         event.customer = this.customer;
-        this.projectService.createProjects(event).subscribe(res => {
-            for (const prop of Object.keys(event)) {
-                delete event[prop];
-            }
-            this.getProjects();
-        });
+        await this.projectService.createProjects(event);
+        for (const prop of Object.keys(event)) {
+            delete event[prop];
+        }
+        this.getProjects();
     }
 
     getAttachName(attach: CustomerAttachment) {
@@ -143,10 +142,12 @@ export class CustomerInfoComponent implements OnInit {
         return this.customer.coordinator && (this.customer.accounting ? this.customer.account_manager : true) && this.customer.name;
     }
 
-    updateProj($event) {
-        this.projectService.createProjects({ id: $event.id, name: $event.name, customer: $event.customer }).subscribe(
-            () => this.projectService.handleSuccess(`${$event.name} was updated.`),
-            () => this.getProjects()
-        );
+    async updateProj($event) {
+        try {
+            await this.projectService.createProjects({ id: $event.id, name: $event.name, customer: $event.customer });
+            this.projectService.handleSuccess(`${$event.name} was updated.`);
+        } catch (err) {
+            this.getProjects();
+        }
     }
 }

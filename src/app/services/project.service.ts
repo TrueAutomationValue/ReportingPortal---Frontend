@@ -8,24 +8,26 @@ import { Project, ImportBodyPattern } from '../shared/models/project';
 export class ProjectService extends SimpleRequester {
 
   getProjects(project: Project) {
-    return this.doPost('/project/get', project).map(res => res.json());
+    return this.doGet('/project', project).map(res => res.json());
   }
 
   async getProject(id: number): Promise<Project> {
-    const projects = await this.doPost('/project/get', {id}).map(res => res.json()).toPromise();
+    const projects = await this.doGet('/project', { id }).map(res => res.json()).toPromise();
     return projects[0];
   }
 
-  createProjects(project: Project) {
+  createProjects(project: Project): Promise<Project> {
     if (!project.customer_id && project.customer) {
       project.customer_id = project.customer.id;
     }
-    return this.doPost('/project/create', project).map(res => res.headers.get('id'), err => { this.handleError(err); });
+    const result = this.doPost('/project', project).map(res => res.json(),
+      (err: any) => { this.handleError(err); }).toPromise();
+    return result;
   }
 
   removeProject(project: Project) {
-    return this.doDelete(`/project?projectId=${project.id}`, )
-    .map(() => this.handleSuccess(`Project '${project.name}' was deleted.`));
+    return this.doDelete('/project', { id: project.id })
+      .map(() => this.handleSuccess(`Project '${project.name}' was deleted.`));
   }
 
   getImportBodyPatterns(bodyPattern: ImportBodyPattern) {
@@ -33,15 +35,15 @@ export class ProjectService extends SimpleRequester {
   }
 
   createImportBodyPattern(bodyPattern: ImportBodyPattern) {
-    return this.doPost('/body_pattern', bodyPattern).map(() => {});
+    return this.doPost('/body_pattern', bodyPattern).map(() => { });
   }
 
   removeImportBodyPattern(bodyPattern: ImportBodyPattern) {
     return this.doDelete(`/body_pattern?id=${bodyPattern.id}&projectId=${bodyPattern.project_id}`)
-    .map(() => this.handleSuccess(`Unique Body Pattern '${bodyPattern.name}' successfully removed.`));
+      .map(() => this.handleSuccess(`Unique Body Pattern '${bodyPattern.name}' successfully removed.`));
   }
 
   createImportToken(project: Project) {
-    return this.doPost(`/project/importToken`, project).map(res => res.json());
+    return this.doGet(`/project/importToken`, project).map(res => res.json());
   }
 }

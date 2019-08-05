@@ -57,22 +57,14 @@ export class TestrunMatrixComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
-        await this.testSuiteService.getTestSuite({ project_id: this.route.snapshot.params['projectId'] }).then(res => {
-            this.suites = res;
-        });
-        await this.finalResultService.getFinalResult({}).toPromise().then(res => {
-            this.finalResults = res;
-        });
-        await this.testrunService.getTestsRunLabels(0).toPromise().then(res => {
-            this.labels = res;
-        });
-        await this.resultResolutionService.getResolution(this.route.snapshot.params['projectId']).toPromise().then(res => {
-            this.listOfResolutions = res;
-            const frFilter = this.finalResults.find(x => x.id === 2);
-            frFilter.id = 100000;
-            this.listOfResolutions.push(frFilter);
-            this.filterValues = this.listOfResolutions;
-        });
+        this.suites = await this.testSuiteService.getTestSuite({ project_id: this.route.snapshot.params['projectId'] });
+        this.finalResults = await this.finalResultService.getFinalResult({});
+        this.labels = await this.testrunService.getTestsRunLabels(0).toPromise();
+        this.listOfResolutions = await this.resultResolutionService.getResolution(this.route.snapshot.params['projectId']).toPromise();
+        const frFilter = this.finalResults.find(x => x.id === 2);
+        frFilter.id = 100000;
+        this.listOfResolutions.push(frFilter);
+        this.filterValues = this.listOfResolutions;
 
         this.route.queryParams.subscribe(params => {
             this.selectedSuite = params['suite'] ? this.suites.find(x => x.id === +params['suite']) : undefined;
@@ -90,7 +82,7 @@ export class TestrunMatrixComponent implements OnInit {
         await this.testrunService.getTestRunWithChilds({
             test_suite_id: this.selectedSuite.id,
             label_id: this.label.id
-        }, this.resultsNumber === 'all' ? 0 : +this.resultsNumber).subscribe(testRuns => {
+        }, this.resultsNumber === 'all' ? 0 : +this.resultsNumber).then(testRuns => {
             this.testRuns = testRuns;
             this.testService.getTest({
                 test_suite_id: this.selectedSuite.id,

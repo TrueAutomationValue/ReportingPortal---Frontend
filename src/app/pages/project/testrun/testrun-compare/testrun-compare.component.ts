@@ -64,15 +64,9 @@ export class TestrunCompareComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
-        await this.testSuiteService.getTestSuite({ project_id: this.route.snapshot.params['projectId'] }).then(testSuites => {
-            this.suites = testSuites;
-        });
-        await this.testrunService.getTestRun({ project_id: this.route.snapshot.params['projectId'] }).toPromise().then(testruns => {
-            this.testRuns = testruns;
-        });
-        await this.finalResultService.getFinalResult({}).toPromise().then(finalResults => {
-            this.finalResults = finalResults;
-        });
+        this.suites = await this.testSuiteService.getTestSuite({ project_id: this.route.snapshot.params['projectId'] });
+        this.testRuns = await this.testrunService.getTestRun({ project_id: this.route.snapshot.params['projectId'] });
+        this.finalResults = await this.finalResultService.getFinalResult({});
         await this.resultResolutionService.getResolution().toPromise().then(resolutions => {
             this.listOfResolutions = resolutions;
             this.userService.getProjectUsers(this.route.snapshot.params['projectId']).subscribe(projectUsers => {
@@ -121,10 +115,8 @@ export class TestrunCompareComponent implements OnInit {
         this.onlyDiffs = !this.onlyDiffs;
     }
 
-    getResult(id: number, results: string) {
-        return this.testrunService.getTestRunWithChilds({ id: id }).toPromise().then(res => {
-            this[results] = res[0].testResults;
-        });
+    async getResult(id: number, results: string) {
+        this[results] = (await this.testrunService.getTestRunWithChilds({ id: id }))[0].testResults;
     }
 
     completeTests() {

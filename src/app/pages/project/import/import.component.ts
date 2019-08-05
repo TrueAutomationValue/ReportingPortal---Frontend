@@ -99,7 +99,7 @@ export class ImportComponent {
           editable: false,
           class: 'fit'
         },
-        { name: 'Test Run ID', property: 'testrun_id', filter: false, sorting: false, type: 'text', class: 'fit' },
+        { name: 'Test Run ID', property: 'testrun_id', filter: false, sorting: true, type: 'text', class: 'fit' },
         { name: 'Started', property: 'started', filter: true, sorting: true, type: 'date', class: 'fit' },
         { name: 'Finished', property: 'finished', filter: true, sorting: true, type: 'date', class: 'fit' },
         { name: 'Logs', property: 'log', filter: true, sorting: true, type: 'long-text', editable: false, class: 'ft-width-250' }
@@ -230,13 +230,10 @@ export class ImportComponent {
     });
   }
 
-  createTestSuite($event) {
-    this.suiteService.createTestSuite({ name: $event, project_id: this.route.snapshot.params['projectId'] }).subscribe(() => {
-      this.suiteService.getTestSuite({ project_id: this.route.snapshot.params['projectId'] }).then(suites => {
-        this.suites = suites;
-        this.suite = this.suites.find(x => x.name === $event);
-      });
-    });
+  async createTestSuite($event) {
+    await this.suiteService.createTestSuite({ name: $event, project_id: this.route.snapshot.params['projectId'] });
+    this.suites = await this.suiteService.getTestSuite({ project_id: this.route.snapshot.params['projectId'] });
+    this.suite = this.suites.find(x => x.name === $event);
   }
 
   reqMark(field: string) {
@@ -286,10 +283,8 @@ export class ImportComponent {
     }
   }
 
-  setSuite($event) {
+  async setSuite($event) {
     this.suite = $event;
-    this.testrunService.getTestRun({ test_suite: $event }).subscribe(res => {
-      this.testRuns = res;
-    });
+    this.testRuns = await this.testrunService.getTestRun({ test_suite: $event });
   }
 }

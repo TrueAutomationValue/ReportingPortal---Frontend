@@ -16,6 +16,7 @@ export class SmartTable extends BaseElement {
     private creationRow = this.element.element(by.css('.ft-creation-row'));
     private creationToggler = this.element.element(by.css('.ft-create-toggler'));
     private creationError = this.element.element(by.css('.ft-create-error'));
+    private refreshButton = this.element.element(by.css('.actions-header .ft-refresh'));
 
     private createRowElements = {
         confirmPassword: (columnIndex: number) =>
@@ -160,6 +161,16 @@ export class SmartTable extends BaseElement {
         throw new Error('You are trying to click link in column without link!');
     }
 
+    public async getCellText(columnWithText: string, searchValue: string | number, searchColumn: string) {
+        const cell = await this.getCell(columnWithText, searchValue, searchColumn);
+        return cell.getText();
+    }
+
+    public async getCellTextUsingRowIndex(columnWithText: string, rowIndex: number): Promise<string> {
+        const cell = await this.getCellUsingRowIndex(columnWithText, rowIndex);
+        return cell.getText();
+    }
+
     public async getCellLookup(column: string, searchValue: string, searchColumn: string): Promise<Lookup> {
         const cell = await this.getCell(column, searchValue, searchColumn);
         return this.rowElements.lookup(cell);
@@ -178,6 +189,13 @@ export class SmartTable extends BaseElement {
         }
 
         return false;
+    }
+
+    public async clickRefresh() {
+        if (await this.refreshButton.isDisplayed()) {
+            return this.refreshButton.click();
+        }
+        throw new Error('You are trying to Refresh table without refresh action');
     }
 
     private async isCellContainsEditableElement(cell: ElementFinder) {
@@ -222,20 +240,30 @@ export class SmartTable extends BaseElement {
         return cells[index] as ElementFinder;
     }
 
-    private async getCell(column: string, searchValue: string, searchColumn: string): Promise<ElementFinder> {
+    private async getCell(column: string, searchValue: string | number, searchColumn: string): Promise<ElementFinder> {
         const row = await this.getRow(searchValue, searchColumn);
         const columnIndex = await this.getColumnIndex(column);
         return this.getCellFromRow(row, columnIndex);
     }
 
-    private async getRows(value: string, columnName: string) {
+    private async getCellUsingRowIndex(column: string, index: number): Promise<ElementFinder> {
+        const row = await this.getRowByIndex(index);
+        const columnIndex = await this.getColumnIndex(column);
+        return this.getCellFromRow(row, columnIndex);
+    }
+
+    private async getRows(value: string | number, columnName: string) {
         const columnIndex = await this.getColumnIndex(columnName);
         const locator = `.//tbody/tr[td[${columnIndex + 1}]//*[contains(text(),'${value}')]]`;
         logger.info(`Looking for rows using ${locator} xpath`);
         return this.element.all(by.xpath(locator));
     }
 
-    private async getRow(value: string, columnName: string): Promise<ElementFinder> {
+    private async getAllRows() {
+        return this.element.all(by.xpath(`.//tbody/tr`));
+    }
+
+    private async getRow(value: string | number, columnName: string): Promise<ElementFinder> {
         const rows = await this.getRows(value, columnName);
         if (rows.length < 1) {
             throw new Error(`No rows were found by ${value} value in ${columnName} column`);
@@ -245,5 +273,10 @@ export class SmartTable extends BaseElement {
             logger.warn(`Multiple rows were found by ${value} value in ${columnName} column, the first will be used`);
         }
         return rows[0];
+    }
+
+    private async getRowByIndex(index: number): Promise<ElementFinder> {
+        const rows = await this.getAllRows();
+        return rows[index];
     }
 }

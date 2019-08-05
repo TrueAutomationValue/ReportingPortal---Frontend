@@ -131,13 +131,13 @@ export class TestSuiteViewComponent implements OnInit {
 
   getTestsInfo(id: number) {
     if (id) {
-      this.testSuiteService.getTestSuiteWithChilds({ id: id }).subscribe(testSuites => {
+      this.testSuiteService.getTestSuiteWithChilds({ id: id }).then(testSuites => {
         this.testSuite = testSuites[0];
         this.calculateManualDuration();
         this.testRun = {
           test_suite: { id: this.testSuite.id }
         };
-        this.testRunService.getTestRun(this.testRun).subscribe(testRuns => {
+        this.testRunService.getTestRun(this.testRun).then(testRuns => {
           this.testRuns = testRuns;
         });
       });
@@ -218,7 +218,7 @@ export class TestSuiteViewComponent implements OnInit {
     if ($event.developer) {
       $event.developer_id = $event.developer.user_id;
     }
-    this.testService.createTest($event, false).subscribe(() => { }, () => {
+    this.testService.createTest($event).subscribe(() => { }, () => {
       this.testService.getTest({ test_suite_id: this.testSuite.id }).subscribe(res => this.testSuite.tests = res);
     });
   }
@@ -238,7 +238,7 @@ export class TestSuiteViewComponent implements OnInit {
       project_id: this.testSuite.project_id
     };
 
-    this.testSuiteService.createTestSuite(updTemplate).subscribe();
+    this.testSuiteService.createTestSuite(updTemplate).then();
   }
 
   handleAction($event: { action: string; entity: Test; }) {
@@ -272,7 +272,7 @@ export class TestSuiteViewComponent implements OnInit {
 
   moveToExecute($event) {
     if ($event) {
-      this.testSuiteService.getTestSuiteWithChilds({ id: this.route.snapshot.params['testsuiteId'] }).subscribe(testSuites => {
+      this.testSuiteService.getTestSuiteWithChilds({ id: this.route.snapshot.params['testsuiteId'] }).then(testSuites => {
         this.testSuite = testSuites[0];
         this.child.data = this.testSuite.tests;
         this.child.applyFilters();
@@ -280,7 +280,7 @@ export class TestSuiteViewComponent implements OnInit {
         this.testRun = {
           test_suite_id: this.testSuite.id
         };
-        this.testRunService.getTestRun(this.testRun).subscribe(testRuns => {
+        this.testRunService.getTestRun(this.testRun).then(testRuns => {
           this.testRuns = testRuns;
         });
       });

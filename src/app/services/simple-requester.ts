@@ -32,10 +32,7 @@ export class SimpleRequester extends Http {
     }
   }
 
-  public doPost(url: string, object?, overlay: boolean = true) {
-    if (overlay) {
-      this.turnOnModal();
-    }
+  public doPost(url: string, object?) {
     let jsonString = JSON.stringify(object);
     if (typeof jsonString === 'undefined') { jsonString = '{}'; }
     const headers = new Headers();
@@ -43,10 +40,7 @@ export class SimpleRequester extends Http {
     return this.intercept(super.post(this.api + url, jsonString, { headers: headers }), true);
   }
 
-  public doPut(url: string, object?, overlay: boolean = true) {
-    if (overlay) {
-      this.turnOnModal();
-    }
+  public doPut(url: string, object?) {
     let jsonString = JSON.stringify(object);
     if (typeof jsonString === 'undefined') { jsonString = '{}'; }
     const headers = new Headers();

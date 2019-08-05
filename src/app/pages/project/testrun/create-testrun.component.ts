@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SimpleRequester } from '../../../services/simple-requester';
@@ -18,7 +18,7 @@ import { TestRun } from '../../../shared/models/testRun';
     MilestoneService
   ]
 })
-export class CreateTestRunComponent {
+export class CreateTestRunComponent implements OnInit {
   datePickerState: boolean;
   dateLabel: string;
   date: Date;
@@ -47,15 +47,14 @@ export class CreateTestRunComponent {
     this.hours = this.date.getHours();
     this.minutes = this.date.getMinutes();
     this.dateLabel = this.getDateString();
-    this.testSuiteService.getTestSuite({ project_id: this.route.snapshot.params['projectId'] }).then(result => {
-      this.testSuites = result;
-    }, error => console.log(error)
-    );
 
-    this.milestoneService.getMilestone({ project_id: this.route.snapshot.params['projectId'] }).subscribe(result => {
-      this.milestones = result;
-    }, error => console.log(error)
-    );
+  }
+
+  async ngOnInit() {
+    [this.testSuites, this.milestones] = await Promise.all([
+      this.testSuiteService.getTestSuite({ project_id: this.route.snapshot.params['projectId'] }),
+      this.milestoneService.getMilestone({ project_id: this.route.snapshot.params['projectId'] })
+    ]);
   }
 
   testSuiteChange(newtestsuite: TestSuite) {
@@ -97,7 +96,7 @@ export class CreateTestRunComponent {
     return this.datepipe.transform(this.date, 'dd/MM/yyyy HH:mm');
   }
 
-  processTestRunCreation() {
+  async processTestRunCreation() {
     const testRun: TestRun = {
       build_name: this.newBuildName,
       test_suite_id: this.testSuite.id,
@@ -110,8 +109,7 @@ export class CreateTestRunComponent {
     if (this.milestone) {
       testRun.milestone_id = this.milestone.id;
     }
-    this.postService.createTestRun(testRun).subscribe(result => {
-      this.router.navigate(['/project/' + this.route.snapshot.params['projectId'] + '/testrun/' + result]);
-    }, error => console.log(error));
+    const result = await this.postService.createTestRun(testRun);
+    this.router.navigate(['/project/' + this.route.snapshot.params['projectId'] + '/testrun/' + result.id]);
   }
 }

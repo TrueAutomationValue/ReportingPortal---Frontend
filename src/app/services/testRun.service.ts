@@ -9,35 +9,34 @@ import { TestRunStat } from '../shared/models/testrunStats';
 @Injectable()
 export class TestRunService extends SimpleRequester {
 
-  getTestRun(testRun: TestRun, limit: number = 0) {
+  getTestRun(testRun: TestRun, limit: number = 0): Promise<TestRun[]> {
     testRun.project_id = this.route.snapshot.params['projectId'];
-    const limitQP = limit === 0 ? '' : `?limit=${limit}`;
-    return this.doPost(`/testrun/get${limitQP}`, testRun).map(res => res.json());
+    testRun['limit'] = limit;
+    return this.doGet(`/testrun`, testRun).map(res => res.json()).toPromise();
   }
 
-  getTestRunWithChilds(testRun: TestRun, limit: number = 0) {
+  getTestRunWithChilds(testRun: TestRun, limit: number = 0): Promise<TestRun[]> {
     testRun.project_id = this.route.snapshot.params['projectId'];
-    const limitQP = limit === 0 ? '' : `&limit=${limit}`;
-    return this.doPost(`/testrun/get?${this.withChildsQP}${limitQP}`, testRun).map(res => res.json());
+    testRun['limit'] = limit;
+    testRun['withChildren'] = 1;
+    return this.doGet(`/testrun`, testRun).map(res => res.json()).toPromise();
   }
 
-  createTestRun(testRun: TestRun) {
+  createTestRun(testRun: TestRun): Promise<TestRun> {
     if (testRun.testResults) {
       testRun.testResults = undefined;
     }
-    return this.doPost('/testrun/create', testRun).map(res => {
-      return res.headers.get('id');
-    });
+    return this.doPost('/testrun', testRun).map(res => res.json()).toPromise();
   }
 
-  removeTestRun(testRun: TestRun) {
-    return this.doDelete(`/testrun?id=${testRun.id}&projectId=${testRun.project_id}`, )
-    .map(() => this.handleSuccess(`Test run '${testRun.build_name}/${testRun.start_time}' was deleted.`));
+  removeTestRun(testRun: TestRun): Promise<void> {
+    return this.doDelete(`/testrun`, {id: testRun.id, projectId: testRun.project_id})
+      .map(() => this.handleSuccess(`Test run '${testRun.build_name}/${testRun.start_time}' was deleted.`)).toPromise();
   }
 
   getTestsRunStats(testRun: TestRun, overlay: boolean = true): Promise<TestRunStat[]> {
     testRun.project_id = this.route.snapshot.params['projectId'];
-    return this.doPost('/stats/testrun', testRun, overlay).map(res => res.json()).toPromise<TestRunStat[]>();
+    return this.doGet('/stats/testrun', testRun, overlay).map(res => res.json()).toPromise<TestRunStat[]>();
   }
 
   getTestsRunLabels(id: number) {
@@ -49,7 +48,7 @@ export class TestRunService extends SimpleRequester {
     return this.doPost(`/testrun/report?test_run_id=${testRun.id}`, users).map(res => res);
   }
 
-  calculateDuration(testRun: TestRun|TestRunStat): string {
+  calculateDuration(testRun: TestRun | TestRunStat): string {
     const start_time = new Date(testRun.start_time);
     const finish_time = new Date(testRun.finish_time);
     const duration = (finish_time.getTime() - start_time.getTime()) / 1000;

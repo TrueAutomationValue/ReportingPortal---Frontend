@@ -1,4 +1,4 @@
-import { Component, Input} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SimpleRequester } from '../../../services/simple-requester';
 import { TestResultService } from '../../../services/test-result.service';
 import { TestResult } from '../../../shared/models/test-result';
@@ -17,7 +17,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   ]
 })
 
-export class FinalResultsTimelineComponent {
+export class FinalResultsTimelineComponent implements OnInit{
   @Input() testResults: TestResult[];
   listOfFinalResults: FinalResult[];
   lineChartOptions: any = {};
@@ -29,12 +29,12 @@ export class FinalResultsTimelineComponent {
     private testResultService: TestResultService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
-    this.finalResultService.getFinalResult({}).subscribe(result => {
-      this.listOfFinalResults = result;
-      this.fillChartData();
-      this.fillLineChartOptionstColors();
-    }, error => console.log(error));
+  ) {}
+
+  async ngOnInit() {
+    this.listOfFinalResults = await this.finalResultService.getFinalResult({});
+    this.fillChartData();
+    this.fillLineChartOptionstColors();
   }
 
   setValueCallback(label): string {
@@ -45,10 +45,10 @@ export class FinalResultsTimelineComponent {
     const dataArray: any[] = [];
     for (const testResult of this.testResults) {
       if (testResult.finish_date) {
-        dataArray.push({x: new Date(testResult.finish_date), y: testResult.final_result.id, r: 15});
+        dataArray.push({ x: new Date(testResult.finish_date), y: testResult.final_result.id, r: 15 });
       }
     }
-    this.lineChartData.push({data: dataArray});
+    this.lineChartData.push({ data: dataArray });
   }
 
   chartClicked(e: any) {

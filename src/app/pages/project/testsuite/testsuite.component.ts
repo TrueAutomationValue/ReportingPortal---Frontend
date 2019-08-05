@@ -72,7 +72,7 @@ export class TestSuiteComponent implements OnInit {
 
   async execute($event) {
     if (await $event) {
-      await this.testSuiteService.removeTestSuite(this.testSuiteToRemove).toPromise();
+      await this.testSuiteService.removeTestSuite(this.testSuiteToRemove);
       this.hideModal = true;
       await this.updateSuites();
     }
@@ -84,7 +84,7 @@ export class TestSuiteComponent implements OnInit {
 
   async createSuite(suite: TestSuite) {
     suite.project_id = this.route.snapshot.params['projectId'];
-    await this.testSuiteService.createTestSuite(suite).toPromise();
+    await this.testSuiteService.createTestSuite(suite);
     await this.updateSuites();
   }
 }

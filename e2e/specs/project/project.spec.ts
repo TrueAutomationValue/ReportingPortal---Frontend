@@ -25,12 +25,12 @@ describe('Full Admin Project', () => {
     }
   });
 
-  describe('Create Project ', () => {
+  describe('Create Project', () => {
     it('Create button exists on projects list', () => {
       return expect(projectList.isCreateProjectExists()).toEqual(true);
     });
 
-    it('Click Create Project ', async () => {
+    it('I can open Create Project page by clicking Create Project', async () => {
       await projectList.clickCreateProjectButton();
       return expect(projectCreate.isOpened());
     });
@@ -49,7 +49,7 @@ describe('Full Admin Project', () => {
       return expect(projectCreate.isCreateButtonEnabled()).toBe(true);
     });
 
-    it('Redirected to List after click create ', async () => {
+    it('Redirected to List after success project creation', async () => {
       await projectCreate.clickCreateButton();
       return expect(projectList.isOpened()).toEqual(true);
     });
@@ -71,7 +71,7 @@ describe('Full Admin Project', () => {
       return expect(projectView.isOpened()).toEqual(true);
     });
 
-    it('Just created project should sow a message that this project is empty', () => {
+    it('Just created project should show a message that this project is empty', () => {
       return expect(projectView.isEmpty()).toEqual(true);
     });
   });

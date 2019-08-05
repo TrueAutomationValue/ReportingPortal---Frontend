@@ -21,21 +21,21 @@ export class TestService extends SimpleRequester {
     return this.doGet('/test', params).map(res => res.json());
   }
 
-  createTest(test: Test, overlay: boolean = true) {
-    return this.doPost('/test', test, overlay).map(res => {
+  createTest(test: Test) {
+    return this.doPost('/test', test).map(res => {
       this.handleSuccess(`Test '${test.name}' was updated.`);
       return res.headers.get('id');
     });
   }
 
-  bulkUpdate(tests: Test[], overlay: boolean = true) {
-    return this.doPut('/test', tests, overlay).map(() => {
+  bulkUpdate(tests: Test[]) {
+    return this.doPut('/test', tests).map(() => {
       this.handleSuccess(`Tests were updated.`);
     });
   }
 
-  addTestToTestSuite(test: Test, suite: TestSuite, overlay: boolean = true) {
-    return this.doPost(`/testToSuite?testId=${test.id}&suiteId=${suite.id}&projectId=${suite.project_id}`, overlay).map(() => {
+  addTestToTestSuite(test: Test, suite: TestSuite) {
+    return this.doPost(`/testToSuite?testId=${test.id}&suiteId=${suite.id}&projectId=${suite.project_id}`).map(() => {
       this.handleSuccess(`Test '${test.name}' was added to '${suite.name}' suite.`);
     });
   }

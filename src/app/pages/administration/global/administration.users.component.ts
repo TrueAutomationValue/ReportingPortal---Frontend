@@ -110,7 +110,7 @@ export class AdministrationUsersComponent {
             account_manager: +user.account_manager,
             unit_coordinator: +user.unit_coordinator
         };
-        this.userService.createOrUpdateUser(userTemplate, false).subscribe();
+        this.userService.createOrUpdateUser(userTemplate).subscribe();
     }
 
     createUser(user: User) {

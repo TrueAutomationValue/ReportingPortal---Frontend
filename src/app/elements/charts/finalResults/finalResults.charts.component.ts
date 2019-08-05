@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild} from '@angular/core';
+import { Component, Input, ViewChild, OnInit } from '@angular/core';
 import { SimpleRequester } from '../../../services/simple-requester';
 import { TestResultService } from '../../../services/test-result.service';
 import { TestResult } from '../../../shared/models/test-result';
@@ -16,9 +16,10 @@ import { Router, ActivatedRoute } from '@angular/router';
     FinalResultService
   ]
 })
-export class FinalResultChartsComponent {
+export class FinalResultChartsComponent implements OnInit{
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
   @Input() testResults: TestResult[];
+  public lineChartDataTest: Array<any>;
   doughnutChartType = 'doughnut';
   listOfFinalResults: FinalResult[];
   doughnutChartLabels: string[] = [];
@@ -39,16 +40,16 @@ export class FinalResultChartsComponent {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.finalResultService.getFinalResult({}).subscribe(result => {
-      this.listOfFinalResults = result;
-      this.testResults = this.testResults.filter(x => x.debug === 0);
-      this.fillChartData();
-      this.fillChartLabels();
-      this.fillChartColors();
-    }, error => console.log(error));
+
   }
 
-  public lineChartDataTest: Array<any>;
+  async ngOnInit(){
+    this.listOfFinalResults = await this.finalResultService.getFinalResult({});
+    this.testResults = this.testResults.filter(x => x.debug === 0);
+    this.fillChartData();
+    this.fillChartLabels();
+    this.fillChartColors();
+  }
 
   fillChartLabels() {
     this.doughnutChartLabels = [];
@@ -91,15 +92,15 @@ export class FinalResultChartsComponent {
           break;
       }
     }
-    this.chartColors = [{ backgroundColor: colors}];
+    this.chartColors = [{ backgroundColor: colors }];
   }
 
- public chartClicked(e: any): void {
-  const dataIndex = e.active[0]._index;
-  const label: string = this.chart.labels[dataIndex].toString();
-  const clickedResult = this.listOfFinalResults.find(x => label.startsWith(x.name));
-  this.router.navigate(
-    [`/project/${this.route.snapshot.params['projectId']}/testrun/${this.route.snapshot.params['testRunId']}`],
-     { queryParams: { f_final_result_opt: clickedResult.id} });
- }
+  public chartClicked(e: any): void {
+    const dataIndex = e.active[0]._index;
+    const label: string = this.chart.labels[dataIndex].toString();
+    const clickedResult = this.listOfFinalResults.find(x => label.startsWith(x.name));
+    this.router.navigate(
+      [`/project/${this.route.snapshot.params['projectId']}/testrun/${this.route.snapshot.params['testRunId']}`],
+      { queryParams: { f_final_result_opt: clickedResult.id } });
+  }
 }

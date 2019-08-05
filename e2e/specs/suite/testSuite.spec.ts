@@ -75,11 +75,8 @@ describe('Full Admin Test Suite', () => {
     return expect(testSuiteView.isAutomationDurationLabel()).toBe(false, 'Automation Duration Label is expected to absent');
   });
 
-  it('Click to Test -> Suites', async () => {
+  it('I can Remove Test Suite', async () => {
     await (await testSuiteView.menuBar.tests()).suites();
-  });
-
-  it('Remove Test Suite', async () => {
     await testSuiteList.clickRemoveSuiteButton(suite.name);
     await expect(testSuiteList.modal.isVisible()).toBe(true, 'Remove Test Run modal is not opened');
     await testSuiteList.modal.clickActionBtn('yes');

@@ -22,6 +22,10 @@ export class MenuBar {
         return element(by.id('logout')).click();
     }
 
+    import() {
+        return element(by.id('Import')).click();
+    }
+
     async create() {
         await element(by.id('Create')).click();
         return new CreateOptions();

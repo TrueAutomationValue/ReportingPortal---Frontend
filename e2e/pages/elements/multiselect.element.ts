@@ -1,7 +1,8 @@
 import { by, Locator } from 'protractor';
 import { BaseElement } from './base.element';
+import { WithSearch } from './interfaces/elementWithSearch';
 
-export class Multiselect extends BaseElement {
+export class Multiselect extends BaseElement implements WithSearch {
     constructor(locator: Locator) {
         super(locator);
     }

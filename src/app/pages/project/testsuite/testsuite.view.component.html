@@ -16,7 +16,7 @@
       <div class="btn-group pull-right" role="group">
         <button class="btn btn-primary" routerLink="/project/{{testSuite.project_id}}/testrun/matrix"
           [queryParams]="{suite:testSuite.id}">Suite Matrix</button>
-        <button *ngIf="userService.IsLocalAdmin() || userService.IsLocalManager() || userService.IsManager()"
+        <button id="move-test-btn"*ngIf="userService.IsLocalAdmin() || userService.IsLocalManager() || userService.IsManager()"
           class="btn btn-primary" (click)="moveTestOpen()">Move Test</button>
         <button [disabled]="!testSuite.tests" (click)="ExportToCSV()" class="btn">Export to CSV</button>
         <button (click)="openTestCreation()"

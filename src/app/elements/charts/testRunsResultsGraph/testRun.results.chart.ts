@@ -112,12 +112,10 @@ export class TestRunsResultsTimelineComponent implements OnChanges {
   ) {
   }
 
-  ngOnChanges() {
+  async ngOnChanges() {
     if (!this.listOfFinalResults || this.listOfFinalResults.length < 1) {
-      this.finalResultService.getFinalResult({}).subscribe(result => {
-        this.listOfFinalResults = result;
-        this.fillData();
-      }, error => console.log(error));
+      this.listOfFinalResults = await this.finalResultService.getFinalResult({});
+      this.fillData();
     } else {
       this.fillData();
     }

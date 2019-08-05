@@ -7,14 +7,15 @@ import { TestSuite, SuiteDashboard } from '../shared/models/testSuite';
 @Injectable()
 export class TestSuiteService extends SimpleRequester {
 
-  getTestSuite(testsuite: TestSuite, overlay: boolean = true) {
+  getTestSuite(testsuite: TestSuite, overlay: boolean = true): Promise<TestSuite[]> {
     testsuite.project_id = this.route.snapshot.params['projectId'];
-    return this.doPost('/suite/get', testsuite, overlay).map(res => res.json()).toPromise<TestSuite[]>();
+    return this.doGet('/suite', testsuite, overlay).map(res => res.json()).toPromise<TestSuite[]>();
   }
 
-  getTestSuiteWithChilds(testsuite: TestSuite) {
+  getTestSuiteWithChilds(testsuite: TestSuite): Promise<TestSuite[]> {
     testsuite.project_id = this.route.snapshot.params['projectId'];
-    return this.doPost(`/suite/get?${this.withChildsQP}`, testsuite).map(res => res.json());
+    testsuite['withChildren'] = 1;
+    return this.doGet(`/suite`, testsuite).map(res => res.json()).toPromise();
   }
 
   getTestSuiteStat(testsuite: TestSuite) {
@@ -26,13 +27,13 @@ export class TestSuiteService extends SimpleRequester {
     return this.doGet(`/suite/stat`, params).map(res => res.json());
   }
 
-  createTestSuite(testsuite: TestSuite) {
-    return this.doPost('/suite/create', testsuite).map(res => res.headers.get('id'));
+  createTestSuite(testsuite: TestSuite): Promise<TestSuite> {
+    return this.doPost('/suite', testsuite).map(res => res.json()).toPromise();
   }
 
-  removeTestSuite(testSuite: TestSuite) {
+  removeTestSuite(testSuite: TestSuite): Promise<void> {
     return this.doDelete(`/suite?id=${testSuite.id}&projectId=${testSuite.project_id}`)
-      .map(res => this.handleSuccess(`Test Suite '${testSuite.name}' was deleted.`));
+      .map(() => this.handleSuccess(`Test Suite '${testSuite.name}' was deleted.`)).toPromise();
   }
 
   getSuiteDashboards(projectId: number): Promise<SuiteDashboard[]> {

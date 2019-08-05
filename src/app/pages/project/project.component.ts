@@ -104,9 +104,9 @@ export class ProjectComponent {
     this.router.navigate([`/project/${$event.id}`]);
   }
 
-  updateProj($event) {
-    this.projectService.createProjects({ id: $event.id, name: $event.name, customer: $event.customer }).subscribe(() =>
-      this.projectService.handleSuccess(`${$event.name} was updated.`));
+  async updateProj($event) {
+    await this.projectService.createProjects({ id: $event.id, name: $event.name, customer: $event.customer });
+    this.projectService.handleSuccess(`${$event.name} was updated.`);
   }
 
   handleAction($event) {

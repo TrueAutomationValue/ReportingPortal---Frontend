@@ -66,11 +66,11 @@ export class UserService extends SimpleRequester {
     return this.doGet(`/users${params}`).map(res => res.json());
   }
 
-  createOrUpdateUser(user: User, overlay: boolean = true) {
+  createOrUpdateUser(user: User) {
     if (!user.password) {
       user.password = undefined;
     }
-    return this.doPost('/users', user, overlay).map(res => res, err => {
+    return this.doPost('/users', user).map(res => res, err => {
       this.handleError(err);
     });
   }

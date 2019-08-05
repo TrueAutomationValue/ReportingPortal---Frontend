@@ -2,7 +2,7 @@
     {{selectedItemText}}
 </div>
 <div *ngIf="array && !disabled" class="selector-container">
-    <button type="button" class="form-control lookup-field" (click)="toggle()" (blur)="toggleOff()"
+    <button type="button" class="form-control lookup-field selector-main-button" (click)="toggle()" (blur)="toggleOff()"
         [disabled]="disabled" [ngClass]="{
       'lookup-selector-sm': small,
       'inner-text-placeholder' : selectedItemText === placeholder

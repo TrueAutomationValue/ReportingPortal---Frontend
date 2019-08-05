@@ -12,7 +12,7 @@ import { CustomerService } from '../../services/customer.service';
     CustomerService,
     ProjectService,
     SimpleRequester
-   ]
+  ]
 })
 export class CreateProjectComponent implements OnInit {
   customers: User[];
@@ -22,7 +22,7 @@ export class CreateProjectComponent implements OnInit {
     public customerService: CustomerService,
     private projectService: ProjectService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.customerService.getCustomer().subscribe(result => {
@@ -30,10 +30,13 @@ export class CreateProjectComponent implements OnInit {
     });
   }
 
-  processProjectCreation() {
-    this.projectService.createProjects(this.newProject).subscribe(() => {
+  async processProjectCreation() {
+    try {
+      this.projectService.createProjects(this.newProject);
       this.router.navigate(['/project/']);
       this.projectService.handleSuccess(`${this.newProject.name} project is created!`);
-    }, error => console.log(error));
+    } catch (err) {
+      this.projectService.handleError(err);
+    }
   }
 }

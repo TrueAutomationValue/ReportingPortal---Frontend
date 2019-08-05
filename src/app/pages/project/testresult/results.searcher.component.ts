@@ -50,7 +50,7 @@ export class ResultSearcherComponent {
     this.toggledOn = this.toggledOn === 'out' ? 'in' : 'out';
   }
 
-  getResults() {
+  async getResults() {
     this.tbCols = [
       { name: 'Started', property: 'start_date', filter: true, sorting: true, type: 'date', editable: false, class: 'fit' },
       { name: 'Test Name', property: 'test.name', filter: true, sorting: true, type: 'text', editable: false },
@@ -92,9 +92,7 @@ export class ResultSearcherComponent {
     if (this.failReasonSearch.length > 150) {
       this.failReasonSearch = this.failReasonSearch.slice(0, 150);
     }
-    this.testResultService.getTestResult({ fail_reason: this.failReasonSearch }).subscribe(result => {
-      this.testResults = result;
-    });
+    this.testResults = await this.testResultService.getTestResult({ fail_reason: this.failReasonSearch });
   }
 
   rowClicked($event) {

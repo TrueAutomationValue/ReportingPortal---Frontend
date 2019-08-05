@@ -8,9 +8,14 @@ export class Lookup extends BaseElement {
 
     private selector = this.element.element(by.css('.selector-main-button'));
 
+    public getSelectedValue() {
+        return this.selector.getText();
+    }
+
     public openSelector() {
         return this.selector.click();
     }
+
     public async select(value: string) {
         await this.openSelector();
         return this.findOption(value).click();

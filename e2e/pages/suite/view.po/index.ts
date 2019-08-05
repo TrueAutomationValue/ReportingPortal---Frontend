@@ -1,11 +1,14 @@
 import { browser } from 'protractor';
 import { BasePage } from '../../base.po';
 import { elements, baseUrl, names } from './constants';
+import { MoveTest } from '../../modals/moveTest.po';
 
 export class SuiteView extends BasePage {
   constructor() {
     super(elements.uniqueElement, names.pageName);
   }
+
+  moveTestmodal = new MoveTest();
 
   navigateTo(id: number, item: number) {
     return browser.get(baseUrl(id, item));
@@ -29,5 +32,9 @@ export class SuiteView extends BasePage {
 
   getTotalTestsSuite() {
     return elements.totalTestsLabel.getText();
+  }
+
+  async clickMoveTest() {
+      return elements.moveTestBtn.click();
   }
 }

@@ -17,7 +17,7 @@
                         'col-sm-12': pairsToMove.length === 1,
                         'mt-field-horizontal': pairsToMove.length > 1
                        }">
-                        <lookup-autocomplete maxlength="1000" placeholder="Move from" [propertiesToShow]="['name']" [array]="tests" [(model)]="pair.from"></lookup-autocomplete>
+                        <lookup-autocomplete class="mt-from" maxlength="1000" placeholder="Move from" [propertiesToShow]="['name']" [array]="tests" [(model)]="pair.from"></lookup-autocomplete>
                     </div>
                     <div class="mt-transition" [ngClass]="{
                       'col-sm-12': pairsToMove.length === 1,
@@ -33,7 +33,7 @@
                       'col-sm-12': pairsToMove.length === 1,
                       'mt-field-horizontal': pairsToMove.length > 1
                      }">
-                        <lookup-autocomplete maxlength="1000" placeholder="Move to" [propertiesToShow]="['name']" [array]="tests" [(model)]="pair.to"></lookup-autocomplete>
+                        <lookup-autocomplete class="mt-to" maxlength="1000" placeholder="Move to" [propertiesToShow]="['name']" [array]="tests" [(model)]="pair.to"></lookup-autocomplete>
                     </div>
 
                     <div class="mt-transition mt-icon-remove" [hidden]="pairsToMove.length === 1" (click)="remove(i)">
@@ -47,7 +47,7 @@
             </div>
             <div class="col-sm-12 modal-buttons">
                 <div class="modal-buttons-form">
-                    <button autofocus (click)="validatePairs(button.execute)" class="btn btn-sm btn-default" *ngFor="let button of buttons">{{button.name}}</button>
+                    <button [id]="button.name" autofocus (click)="validatePairs(button.execute)" class="btn btn-sm btn-default" *ngFor="let button of buttons">{{button.name}}</button>
                 </div>
             </div>
         </div>

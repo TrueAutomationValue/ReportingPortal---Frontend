@@ -21,10 +21,9 @@ export class CreateMilestoneComponent {
     private router: Router
   ) {}
 
-  processMilestoneCreation() {
+  async processMilestoneCreation() {
     const milestone: Milestone = { name: this.newMilestoneName, project_id: this.route.snapshot.params['projectId'] };
-    this.postService.createMilestone(milestone).subscribe(result => {
-      this.router.navigate(['/project/' + milestone.project_id + '/testrun'], { queryParams: { milestone: result} });
-    }, error => console.log(error));
+    const result = await this.postService.createMilestone(milestone);
+    this.router.navigate(['/project/' + milestone.project_id + '/testrun'], { queryParams: { milestone: result.id} });
   }
 }

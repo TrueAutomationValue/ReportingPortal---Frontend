@@ -41,24 +41,22 @@ export class TestResultViewComponent implements OnInit {
     private resultResolutionService: ResultResolutionService,
     private finalResultService: FinalResultService,
     private testResultService: TestResultService
-  ) {
-    this.resultResolutionService.getResolution().subscribe(result => {
+  ) { }
+
+  async ngOnInit() {
+    await this.resultResolutionService.getResolution().subscribe(result => {
       this.listOfResolutions = result;
     }, error => console.log(error));
-    this.finalResultService.getFinalResult({}).subscribe(result => {
-      this.listOfFinalResults = result;
-    }, error => console.log(error));
-    this.userService.getProjectUsers(this.route.snapshot.params['projectId'])
-      .subscribe(res => { this.users = res.filter(x => x.admin === 1 || x.manager === 1 || x.engineer === 1); });
-  }
+    this.listOfFinalResults = await this.finalResultService.getFinalResult({});
+    await this.userService.getProjectUsers(this.route.snapshot.params['projectId']).subscribe(res => {
+      this.users = res.filter(x => x.admin === 1 || x.manager === 1 || x.engineer === 1);
+    });
 
-  ngOnInit() {
     this.projectId = this.route.snapshot.params['projectId'];
     const testResultTemplate: TestResult = { id: this.route.snapshot.params['testresultId'] };
-    this.testResultService.getTestResult(testResultTemplate).subscribe(result => {
-      this.currentState = result[0];
-      Object.assign(this.savedState, this.currentState);
-    }, error => console.log(error));
+    const testResult = await this.testResultService.getTestResult(testResultTemplate);
+    this.currentState = testResult[0];
+    Object.assign(this.savedState, this.currentState);
   }
 
   calculateDuration(): string {
@@ -121,7 +119,7 @@ export class TestResultViewComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  Update() {
+  async Update() {
     const testResultUpdateTemplate: TestResult = {
       id: this.currentState.id,
       test_id: this.currentState.test.id,
@@ -131,11 +129,10 @@ export class TestResultViewComponent implements OnInit {
       debug: this.currentState.debug,
       assignee: this.currentState.assignee
     };
-    this.testResultService.createTestResult(testResultUpdateTemplate, false).subscribe(() => {
-      this.notificationsService.success(
-        `Successful`,
-        'Result was updated.'
-      );
-    });
+    await this.testResultService.createTestResult(testResultUpdateTemplate);
+    this.notificationsService.success(
+      `Successful`,
+      'Result was updated.'
+    );
   }
 }

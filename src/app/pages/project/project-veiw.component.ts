@@ -41,11 +41,11 @@ export class ProjectViewComponent implements OnInit {
     private router: Router
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.testRun = { project_id: this.route.snapshot.params['projectId'], debug: 0 };
     this.project = { id: this.route.snapshot.params['projectId'] };
 
-    this.projectService.getProjects(this.project).subscribe(projects => {
+    this.projectService.getProjects(this.project).subscribe(async (projects) => {
       this.project = projects[0];
       if (this.globaldata.auditModule) {
         this.auditService.getAudits({ project: { id: this.project.id } }).subscribe(audits => {
@@ -54,22 +54,18 @@ export class ProjectViewComponent implements OnInit {
           this.setAuditNotification();
         });
       }
-      this.testrunService.getTestRun(this.testRun, 5).subscribe(testRuns => {
-        this.testRuns = testRuns;
-        this.testrunService.getTestsRunStats(this.testRun).then(stats => {
-          this.testRunStats = stats;
-          this.testRuns.forEach(testrun => {
-            testrun['failed'] = this.getNumberOfFails(testrun.id);
-          });
-          this.columns = [
-            { name: 'Build Name', property: 'build_name', type: 'text' },
-            { name: 'Execution Environment', property: 'execution_environment', type: 'text' },
-            { name: 'Start Time', property: 'start_time', type: 'date', class: 'fit' },
-            { name: 'Finish Time', property: 'finish_time', type: 'date', class: 'fit' },
-            { name: 'Failed Tests, %', property: 'failed', type: 'text', class: 'fit' },
-          ];
-        });
-      }, error => console.log(error));
+      this.testRuns = await this.testrunService.getTestRun(this.testRun, 5);
+      this.testRunStats = await this.testrunService.getTestsRunStats(this.testRun);
+      this.testRuns.forEach(testrun => {
+        testrun['failed'] = this.getNumberOfFails(testrun.id);
+      });
+      this.columns = [
+        { name: 'Build Name', property: 'build_name', type: 'text' },
+        { name: 'Execution Environment', property: 'execution_environment', type: 'text' },
+        { name: 'Start Time', property: 'start_time', type: 'date', class: 'fit' },
+        { name: 'Finish Time', property: 'finish_time', type: 'date', class: 'fit' },
+        { name: 'Failed Tests, %', property: 'failed', type: 'text', class: 'fit' },
+      ];
     });
   }
 

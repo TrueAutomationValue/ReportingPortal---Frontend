@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { SimpleRequester } from './simple-requester';
-import { TestResult } from '../shared/models/test-result';
+import { TestResult, TestResultStat } from '../shared/models/test-result';
 
 
 @Injectable()
 export class TestResultService extends SimpleRequester {
 
-  getTestResult(testresult: TestResult) {
+  getTestResult(testresult: TestResult): Promise<TestResult[]> {
     testresult.project_id = this.route.snapshot.params['projectId'];
-    return this.doPost('/testresult/get', testresult).map(res => res.json());
+    return this.doGet('/testresult', testresult).map(res => res.json()).toPromise();
   }
 
-  createTestResult(testresult: TestResult, overlay: boolean = true) {
+  createTestResult(testresult: TestResult): Promise<TestResult> {
     testresult.project_id = this.route.snapshot.params['projectId'];
-    return this.doPost('/testresult', testresult, overlay);
+    return this.doPost('/testresult', testresult).map(res => res.json()).toPromise();
   }
 
-  bulkUpdate(testresults: TestResult[], overlay: boolean = true) {
+  bulkUpdate(testresults: TestResult[]): Promise<void> {
     testresults.forEach(testresult => {
       testresult.project_id = this.route.snapshot.params['projectId'];
       if (testresult.test_resolution) {
@@ -27,17 +27,16 @@ export class TestResultService extends SimpleRequester {
         testresult.assignee = testresult.assigned_user.user_id;
       }
     });
-    return this.doPut('/testresult', testresults, overlay);
+    return this.doPut('/testresult', testresults).map(() => {}).toPromise();
   }
 
-  removeTestResult(testresult: TestResult) {
+  removeTestResult(testresult: TestResult): Promise<void> {
     return this.doDelete(`/testrun?id=${testresult.id}&projectId=${testresult.project_id}`)
-      .map(() => this.handleSuccess(`Test result '${testresult.id}' was deleted.`));
+      .map(() => this.handleSuccess(`Test result '${testresult.id}' was deleted.`)).toPromise();
   }
 
-  getTestResultsStat(projectId, testRunStartedFrom, testRunStartedTo) {
+  getTestResultsStat(projectId, testRunStartedFrom, testRunStartedTo): Promise<TestResultStat[]> {
     const params = { projectId, testRunStartedFrom, testRunStartedTo };
-    return this.doGet(`/testresult/stat`, params).map(res =>
-      res.json());
+    return this.doGet(`/stats/testresult`, params).map(res => res.json()).toPromise();
   }
 }

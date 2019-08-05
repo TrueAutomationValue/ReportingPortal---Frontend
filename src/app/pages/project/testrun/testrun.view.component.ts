@@ -55,9 +55,9 @@ export class TestRunViewComponent implements OnInit {
     });
     this.userService.HaveAnyLocalPermissionsExceptViewer(this.route.snapshot.params['projectId']).then(resolve =>
       this.canEdit = this.userService.IsManager() || resolve);
-    this.testRunService.getTestRunWithChilds({ id: this.route.snapshot.params['testRunId'] }).subscribe(result => {
+    this.testRunService.getTestRunWithChilds({ id: this.route.snapshot.params['testRunId'] }).then(result => {
       this.testRun = result[0];
-      this.milestoneService.getMilestone({ project_id: this.route.snapshot.params['projectId'] }).subscribe(res => {
+      this.milestoneService.getMilestone({ project_id: this.route.snapshot.params['projectId'] }).then(res => {
         this.milestones = res;
       });
       this.testResultTempalte = { test_run_id: this.testRun.id };
@@ -66,7 +66,7 @@ export class TestRunViewComponent implements OnInit {
         this.testRunService.getTestRun({
           project_id: this.route.snapshot.params['projectId'],
           test_suite: { id: this.testRun.test_suite.id }
-        }).subscribe(testRuns => {
+        }).then(testRuns => {
           this.testRuns = testRuns;
           const curTR = this.testRuns.findIndex(x => x.id === this.testRun.id);
           this.nextTR = this.testRuns[curTR - 1] ? this.testRuns[curTR - 1].id : undefined;
@@ -96,7 +96,7 @@ export class TestRunViewComponent implements OnInit {
       start_time: this.testRun.start_time,
       project_id: this.testRun.project_id
     };
-    this.testRunService.createTestRun(testRunUpdateTemplate).subscribe();
+    this.testRunService.createTestRun(testRunUpdateTemplate).then();
   }
 
   sendReport() {
@@ -130,7 +130,7 @@ export class TestRunViewComponent implements OnInit {
     if (this.testRun.milestone) {
       this.testRun.milestone_id = this.testRun.milestone.id;
     }
-    this.testRunService.createTestRun(this.testRun).subscribe(res => {
+    this.testRunService.createTestRun(this.testRun).then(() => {
       if (this.testRun.ci_build === '$blank') {
         this.testRun.ci_build = '';
       }
@@ -146,8 +146,8 @@ export class TestRunViewComponent implements OnInit {
   }
 
   createMilestone($event) {
-    this.milestoneService.createMilestone({ name: $event, project_id: this.testRun.project_id }).subscribe(() => {
-      this.milestoneService.getMilestone({ project_id: this.testRun.project_id }).subscribe(milestones => {
+    this.milestoneService.createMilestone({ name: $event, project_id: this.testRun.project_id }).then(() => {
+      this.milestoneService.getMilestone({ project_id: this.testRun.project_id }).then(milestones => {
         this.milestones = milestones;
         this.testRun.milestone = this.milestones.find(x => x.name === $event);
         this.testRunUpdate();
