@@ -41,7 +41,7 @@
     "jasmine-allure-reporter": "^1.0.2",
     "jquery": "^3.4.1",
     "jsencrypt": "^3.0.0-rc.1",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "jspdf-autotable": "^2.3.5",
     "ng-click-outside": "^3.3.0",
     "ng2-charts": "^1.6.0",
