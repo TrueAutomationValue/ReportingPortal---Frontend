@@ -33,7 +33,7 @@
     "angular4-files-upload": "^1.0.2",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.6.5",
     "custom-a1qa-ng2-datepicker": "^1.0.0",
